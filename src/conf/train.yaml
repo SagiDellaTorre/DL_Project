@@ -9,12 +9,12 @@ data_set_path : C:\Users\sagitorr\Documents\University\Final_Project\Project\dl_
 
 starting_point : 
   train: 0 
-  val: 10
+  val: 0
   test: 0
 
 amount : 
-  train: 10 
-  val: 5
+  train: 1 
+  val: 1
   test: 0
 
 # # For measurements in 'validation_epoch_end' stage
@@ -44,6 +44,7 @@ window_size : 512
 overlap : 256
 context : 1
 sample_rate : 16000
+frequency_num : 513
 # =========== Model HP ==============
 
 train_batch_size : 8

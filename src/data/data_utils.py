@@ -30,7 +30,7 @@ class AudioPreProcessing():
     def transformations(self,target_wav,feature_wav):
         # load signal
 
-        freq_num = 513
+        freq_num = self.args.frequency_num
 
         with open(feature_wav, 'r', newline='') as f:
 
