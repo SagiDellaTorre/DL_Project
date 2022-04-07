@@ -38,22 +38,22 @@ class Pl_module(pl.LightningModule):
         return y_hat
 
     def training_step(self, batch, batch_idx):
-        echo, mic,InputToModel,ref = batch
+        angle, InputToModel = batch
         pred = self.model(InputToModel)
-        loss = self.Loss(echo, pred , mic ,ref) 
+        loss = self.Loss(angle, pred) 
         self.log('train_loss', loss)
         return loss
 
     def validation_step(self, batch, batch_idx): #in each end of epoch
-        echo, mic, InputToModel,ref = batch
+        angle, InputToModel = batch
         pred = self.model(InputToModel)
-        loss = self.Loss(echo, pred  ,mic,ref) 
+        loss = self.Loss(angle, pred) 
         self.log('val_loss', loss)
         
     def test_step(self, batch, batch_idx): #in end of all training process
-        echo, mic,InputToModel,ref = batch
+        angle, InputToModel = batch
         pred = self(InputToModel)
-        loss = self.Loss(echo, pred ,mic,ref) 
+        loss = self.Loss(angle, pred) 
         self.log('test_loss', loss)
 
     # def validation_epoch_end(self, outputs): #in each end of epoch
@@ -85,7 +85,7 @@ class Pl_module(pl.LightningModule):
         optimizer = torch.optim.Adam(self.parameters(), lr=self.args.learning_rate)
         return optimizer
 
-    def Loss(self,echo,pred, mic,ref):
+    def Loss(self,angle,pred):
         # MMSE loss
         # loss = self.criterion(pred,target)
         # SNR loss
@@ -185,7 +185,7 @@ def main(args):
                         # num_sanity_val_steps = 0
                      )
 
-    data_module = StftDataModule(args)
+    data_module = DataModule(args)
     trainer.fit(model = model, datamodule = data_module)
     trainer.test(model = model)  
     checkpoint_callback.best_model_path

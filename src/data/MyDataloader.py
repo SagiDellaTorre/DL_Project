@@ -21,7 +21,7 @@ import torchaudio
 # torchaudio.set_audio_backend("sox_io")
 from data.data_utils import AudioPreProcessing
 
-class AEC_Dataset(Dataset):
+class DOA_Dataset(Dataset):
     """Generated Input and Output to the model"""
 
     def __init__(self,args,data_dir,batch_size,starting_point, amount):
@@ -53,16 +53,16 @@ class AEC_Dataset(Dataset):
 
         return  self.audio_pre_process.transformations(target_wav,feature_wav)
 
-class StftDataModule(pl.LightningDataModule):
+class DataModule(pl.LightningDataModule):
 
     def __init__(self,args): 
         super().__init__()
         self.args=args
 
     def setup(self,stage=None):
-        self.train_set = AEC_Dataset(self.args,self.args.data_set_path,self.args.train_batch_size, self.args.starting_point.train, self.args.amount.train)
-        self.val_set = AEC_Dataset(self.args,self.args.data_set_path,self.args.val_batch_size, self.args.starting_point.val, self.args.amount.val) 
-        self.test_set = AEC_Dataset(self.args,self.args.data_set_path,self.args.test_batch_size, self.args.starting_point.test, self.args.amount.test)
+        self.train_set = DOA_Dataset(self.args,self.args.data_set_path,self.args.train_batch_size, self.args.starting_point.train, self.args.amount.train)
+        self.val_set = DOA_Dataset(self.args,self.args.data_set_path,self.args.val_batch_size, self.args.starting_point.val, self.args.amount.val) 
+        self.test_set = DOA_Dataset(self.args,self.args.data_set_path,self.args.test_batch_size, self.args.starting_point.test, self.args.amount.test)
 
     def train_dataloader(self):
         return DataLoader(self.train_set,batch_size=self.args.train_batch_size, shuffle=self.args.data_loader_shuffle , num_workers =self.args.num_workers, pin_memory= self.args.pin_memory)
