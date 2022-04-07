@@ -143,8 +143,8 @@ def main(args):
     pl_checkpoints_path = os.getcwd() + '\\'
     
     # save train_model.py and model_def.py files as part of hydra output
-    shutil.copy(hydra.utils.get_original_cwd() + '\\dl_project\\src\\train_model.py', 'save_train_model.py')
-    shutil.copy(hydra.utils.get_original_cwd() + '\\dl_project\\src\\models\\def_model.py', 'save_model_def.py')
+    shutil.copy(hydra.utils.get_original_cwd() + '\\src\\train_model.py', 'save_train_model.py')
+    shutil.copy(hydra.utils.get_original_cwd() + '\\src\\models\\def_model.py', 'save_model_def.py')
     
     if args.debug_flag: # debug mode
         fast_dev_run=True
