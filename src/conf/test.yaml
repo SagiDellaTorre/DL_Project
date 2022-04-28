@@ -45,9 +45,9 @@ train_mode : False
 #score_file_aecmos : '/data/ssd/ofersc/NN_AEC/data/external/Test/CEVA_database/'
 
 # =============== data HP ===============
-window_size: 512
-overlap: 256
-context : 1
+window_size: 1024
+overlap: 512
+number_of_direction : 36
 sample_rate : 16000
 # # =============== ========================== Hydra config ==============================================================
 hydra:

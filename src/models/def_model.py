@@ -4,14 +4,14 @@ from torch import nn
 
     
 class GRU(nn.Module):
-    def __init__(self, hidden_size=128, num_layers=2, dropout=0., win_len=512, context=1):
+    def __init__(self, hidden_size=128, num_layers=2, dropout=0., win_len=1024, number_of_direction=36):
         super(GRU,self).__init__()
         freqs = (win_len // 2 + 1)
         self.num_layers = num_layers
         self.hidden_size = hidden_size
-        self.context = context
+        self.number_of_direction = number_of_direction
 
-        self.time_rnn = nn.GRU(freqs*(context+1), hidden_size, num_layers, batch_first=True, dropout=dropout)
+        self.time_rnn = nn.GRU(freqs*number_of_direction, hidden_size, num_layers, batch_first=True, dropout=dropout)
         self.time_fc1 = nn.Linear(hidden_size, hidden_size)
         #self.time_fc2 = nn.Linear(hidden_size, freqs + 1 )
         self.time_fc2 = nn.Linear(hidden_size, freqs  )

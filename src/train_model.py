@@ -135,8 +135,8 @@ class Pl_module(pl.LightningModule):
         return loss 
 
 # ======================================== main section ==================================================
-#Hydra_path = "C:\\Users\\sagitorr\\Documents\\University\\Final_Project\\Project\\dl_project\\src\\conf\\"
-Hydra_path = "C:\\Users\\Dvir\\Desktop\\הנדסה\\שנה ד\\פרויקט גמר\\code\\DL_Project\\src\\conf"
+Hydra_path = "C:\\Users\\sagitorr\\Documents\\University\\Final_Project\\Project\\dl_project\\src\\conf\\"
+#Hydra_path = "C:\\Users\\Dvir\\Desktop\\הנדסה\\שנה ד\\פרויקט גמר\\code\\DL_Project\\src\\conf"
 
 @hydra.main(config_path= Hydra_path,config_name="train.yaml")
 def main(args):

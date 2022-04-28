@@ -5,8 +5,8 @@ defaults:
 #  =========== data-sets ===============
 
 # Main dataset
-data_set_path : C:\Users\Dvir\Desktop\הנדסה\שנה ד\פרויקט גמר\code\DL_Project\data\features
-#data_set_path : C:\Users\sagitorr\Documents\University\Final_Project\Project\dl_project\data\features
+#data_set_path : C:\Users\Dvir\Desktop\הנדסה\שנה ד\פרויקט גמר\code\DL_Project\data\features
+data_set_path : C:\Users\sagitorr\Documents\University\Final_Project\Project\dl_project\data\features
 
 starting_point : 
   train: 0 
@@ -41,9 +41,9 @@ path_wav : '/data/ssd/ofersc/datasets/Test/real/'
 debug_flag: True
 
 # =============== data HP ===============
-window_size : 512
-overlap : 256
-context : 1
+window_size : 1024
+overlap : 512
+number_of_direction : 36
 sample_rate : 16000
 frequency_num : 513
 # =========== Model HP ==============
