@@ -1,4 +1,7 @@
 import preprocessing
+import os
+import sys
+sys.path.append('dl_project/src/RIR_Gen')
 import RIR_Gen
 import numpy as np
 import soundfile as sf
@@ -155,7 +158,7 @@ def features_gen(data_folder, features_folder):
         
 def main():
 
-    features_gen("Final_Proj/input/data/", "Final_Proj/input/features/")
+    features_gen("dl_project/data/", "dl_project/data/features/")
 
 if __name__ == '__main__':
 

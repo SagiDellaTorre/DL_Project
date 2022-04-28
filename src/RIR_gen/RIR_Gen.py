@@ -7,8 +7,8 @@ import csv as csv
 import os
 import sys
 import shutil
-sys.path.append('src/features/')
-import features.gcc as gcc
+sys.path.append('dl_project/src/features')
+import gcc
 # import matlab.engine as mt
 
 def input_file_name_change(data_folder, prefix_name):
@@ -197,6 +197,8 @@ def signal_gen(data_folder, signals_num):
         r_const.append(mic_location_const) #append [x,y,z] specific mic to mics array
 
     for i in range (signals_num):
+
+        print("Create file: " + str(i))
 
         # rand parameters
         angle = np.random.randint(1,361)
