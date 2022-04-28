@@ -7,7 +7,7 @@ import csv as csv
 import os
 import sys
 import shutil
-sys.path.append('dl_project/src/features')
+sys.path.append('src/features')
 import gcc
 # import matlab.engine as mt
 
@@ -323,10 +323,10 @@ def main():
     # change input file name to 'file_1.flac' - only at the first time
     change_input_file_name = False
     if change_input_file_name:
-        input_file_name_change('dl_project/data/oracle/', 'file_')
+        input_file_name_change('data/oracle/', 'file_')
 
     # create the signal with rir generator
-    signal_gen("dl_project/data/", 15)
+    signal_gen("data/", 15)
 
 if __name__ == '__main__':
 
