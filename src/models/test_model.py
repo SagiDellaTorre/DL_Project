@@ -20,7 +20,6 @@ import librosa
 from def_model import *
 from collections import OrderedDict
 import glob
-import pysepm
 import os
 from data.metrics import test_model
 epsilon = 1e-6
