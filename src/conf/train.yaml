@@ -10,12 +10,12 @@ data_set_path : C:\Users\sagitorr\Documents\University\Final_Project\Project\dl_
 
 starting_point : 
   train: 0 
-  val: 0
+  val: 10
   test: 0
 
 amount : 
-  train: 1 
-  val: 1
+  train: 10 
+  val: 5
   test: 0
 
 # # For measurements in 'validation_epoch_end' stage
@@ -84,7 +84,7 @@ gpus : 'None'
 # ========================================= Hydra config ==============================================================
 hydra:
   run:
-    dir: /data/ssd/ofersc/NN_AEC_RLS/models/${hydra.job.override_dirname}/${hydra.job.name}/
+    dir: C:/Users/sagitorr/Documents/University/Final_Project/Project/dl_project/models/${hydra.job.override_dirname}/${hydra.job.name}/
 
   job:
     name: 'Basic_run'
