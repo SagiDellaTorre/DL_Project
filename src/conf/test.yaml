@@ -52,7 +52,7 @@ sample_rate : 16000
 # # =============== ========================== Hydra config ==============================================================
 hydra:
   run:
-    dir: /data/ssd/ofersc/NN_AEC/models/${hydra.job.override_dirname}/${hydra.job.name}/
+    dir: C:/Users/sagitorr/Documents/University/Final_Project/Project/dl_project/models/${hydra.job.override_dirname}/${hydra.job.name}/
   job:
     name: 'Basic_rand_inputs+std'
     config:
