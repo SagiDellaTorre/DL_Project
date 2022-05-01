@@ -83,54 +83,23 @@ class Pl_module(pl.LightningModule):
         optimizer = torch.optim.Adam(self.parameters(), lr=self.args.learning_rate)
         return optimizer
 
-    def Loss(self,angle,pred):
-        # MMSE loss
-        # loss = self.criterion(pred,target)
-        # SNR loss
-        #speech_est = pred[:,:,0:-1] * mic
-        # RLS 
-        #speech_est=0*mic
-        #for n in range(len(speech_oracle[:,0,0])):
-        #    speech_est[n,:,:] = RLS(torch.squeeze(pred[n,:,:]), torch.squeeze(mic[n,:,:]), torch.squeeze(ref[n,:,:]), self.args)
+    def Loss(self,angleVAD,pred):
+
+        angle_pred = (1/360)*pred[:,:386,0]
+        onesVec = torch.ones(angle_pred.shape)
+        VAD_pred = pred[:,:386,1]
+        angle_label = (1/360)*angleVAD[:,:386,0]
+        VAD_label = angleVAD[:,:386,1]
+
+        a = self.criterion(angle_pred*VAD_label,angle_label*VAD_label)
+        b = self.criterion((angle_pred+onesVec)*VAD_label,angle_label*VAD_label)
+        c = self.criterion(angle_pred*VAD_label,(angle_label+onesVec)*VAD_label)
+        angle_loss =torch.minimum(a,b)
+        angle_loss = torch.minimum(angle_loss,c)
+        VAD_loss = self.criterion(VAD_pred,VAD_label)
         
-        echo_est=pred*mic
-
-        #####
-        echo = echo[:,50:,:] # Taking the echo as target !!!!!!!!!!!!!!
-        echo_est = echo_est[:,50:,:]
-        mic = mic[:,50:,:]
-        echo_abs = torch.square(torch.abs(echo)) 
-        others_abs = torch.square(torch.abs(mic-echo)) 
-        flag_echo = torch.tensor( echo_abs > 1e-4 , dtype = torch.bool )
-        flag_others = torch.tensor(  others_abs > 1e-4 , dtype = torch.bool )
-        flag_dt = flag_others & flag_echo
-        #Double talk loss: 
-        Target_energy_dt = torch.zeros(len(echo[:,0,0])) ; Error_energy_dt = torch.zeros(len(echo[:,0,0]));
-        Target_energy_st = torch.zeros(len(echo[:,0,0])) ; Error_energy_st = torch.zeros(len(echo[:,0,0]));
-
-        for n in range(len(echo[:,0,0])):
-            Target_energy_dt[n] = torch.sum(echo_abs[n, flag_dt[n,:,:] ])   
-            Error_energy_dt[n]  = torch.sum(  torch.square( torch.abs( echo_est[ n,flag_dt[n,:,:] ] - echo[ n,flag_dt[n,:,:] ])))
-            Target_energy_st[n] = torch.sum(echo_abs[n, flag_dt[n,:,:].logical_not() ])   
-            Error_energy_st[n]  = torch.sum(  torch.square( torch.abs( echo_est[ n,flag_dt[n,:,:].logical_not() ] - echo[ n,flag_dt[n,:,:].logical_not() ])))
-        
-        alpha = 0.95
-        Target_energy = alpha*Target_energy_dt + (1-alpha) * Target_energy_st
-        Error_energy = alpha*Error_energy_dt + (1-alpha) * Error_energy_st
-        loss = -10 * torch.mean( torch.log10(   torch.clamp( Target_energy ,min=epsilon  ) ) 
-        - torch.log10(  torch.clamp(   Error_energy ,min=epsilon )   )  )  
-
-        # if 0:
-        #     #Visualize spectogram
-        #     fig_0 = plt.figure()
-        #     fig_0.suptitle('input')
-        #     plt.imshow(flag_speech[0,].cpu().T,origin='lower',aspect='auto')
-        #     plt.colorbar()
-        #     plt.show()
-        #     plt.savefig('/data/ssd/ofersc/NN_AEC/reports/figures/temp.png')
-        #     plt.close()
-
-        return loss 
+        loss = angle_loss + VAD_loss
+        return loss
 
 # ======================================== main section ==================================================
 Hydra_path = "C:\\Users\\sagitorr\\Documents\\University\\Final_Project\\Project\\dl_project\\src\\conf\\"
