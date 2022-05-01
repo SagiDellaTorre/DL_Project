@@ -67,38 +67,31 @@ def write_feature(data,data_path, number_of_direction, type):
 
 def read_VAD_lables(VAD_file_path):
 
-    VAD_lables = []
-
-    with open(VAD_file_path, 'r', newline='') as f:
-
-        line_read = csv.reader(f, delimiter=',')
-
-        # loop over all the lines, convert the string to float, and append to the list
-        for row in line_read:
-            VAD_lables = [float(i) for i in row]
-    
-    VAD_lables = np.array(VAD_lables)
+    x = pd.read_csv(VAD_file_path,index_col=False, header=None) 
+    VAD_lables = x.values[1:,1:]
 
     return VAD_lables
 
 def write_lables(VAD_lables, lables_file_path, frame_size, overlap):
 
-    lables = []
+    number_of_frames = int(VAD_lables.shape[0]/(frame_size-overlap)-1)
+    lables = np.zeros((number_of_frames,2))
+    
+    lables[:,0] = VAD_lables[0,0]
 
-    length = len(VAD_lables)
-    i=0
-    while i < length - frame_size:
-        block = VAD_lables[i:i+frame_size]
+    #loop over each frame and check is the most is speech of silence, and write the label
+    for i, block in enumerate(gcc.blocks(VAD_lables, frame_size, overlap)):
+    
+        if len(block) < frame_size:
+            break
 
-        # count number of -1 in block
-        x = np.count_nonzero(block==-1)
+        # count number of 0 in block
+        x = np.count_nonzero(block[:,1]==0)
 
         if x > frame_size/2:
-            lables.append(-1)
+            lables[i,1] = 0
         else:
-            lables.append(block[block != -1][0])
-
-        i = i + frame_size - overlap 
+            lables[i,1] = 1
 
     df = pd.DataFrame(lables)
     df.to_csv(lables_file_path, index=True)

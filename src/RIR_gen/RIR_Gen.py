@@ -9,6 +9,7 @@ import sys
 import shutil
 sys.path.append('src/features')
 import gcc
+import pandas as pd
 # import matlab.engine as mt
 
 def input_file_name_change(data_folder, prefix_name):
@@ -56,12 +57,8 @@ def write_mics_position(header,data,data_path):
 
 def write_VAD(VAD_array,data_path):
 
-    # open the file in the write mode
-    with open(data_path, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(VAD_array)
-    # close the file
-    file.close()
+    df = pd.DataFrame(VAD_array)
+    df.to_csv(data_path, index=True)
 
 def write_meta(header,data,data_path,i):
 
@@ -312,9 +309,9 @@ def signal_gen(data_folder, signals_num):
         write_mics_position(header_rand, data_rand,data_path_rand)
 
         # save VAD lables output files to VAD_lables folder
-        lables = list(map(lambda x: angle if x else -1, VAD_array))
-        data_path_fix = data_folder + 'VAD_lables/random_array/file_'+str(i)+'.csv'
-        data_path_rand = data_folder + 'VAD_lables/fix_array/file_'+str(i)+'.csv'
+        lables = list([angle,1*x] for x in VAD_array)
+        data_path_fix = data_folder + 'VAD_lables/fix_array/file_'+str(i)+'.csv'
+        data_path_rand = data_folder + 'VAD_lables/random_array/file_'+str(i)+'.csv'
         write_VAD(lables,data_path_fix)
         write_VAD(lables,data_path_rand)
 

@@ -10,6 +10,7 @@ import librosa
 import numpy as np
 from scipy.io.wavfile import write
 import csv
+import pandas as pd
 # ==================== Hyper-Params =================================================================================
 epsilon = 1e-12
 
@@ -48,27 +49,14 @@ class AudioPreProcessing():
                 if i == 0:
                     feature_mat = feature 
                 else:
-                    feature_mat = torch.cat((feature_mat, feature), 0)            
+                    feature_mat = torch.cat((feature_mat, feature), 0)
     
-        with open(target_wav, 'r', newline='') as f:
+        x = pd.read_csv(target_wav,index_col=False, header=None) 
+        #convert to numpy and remove headers
+        lables = x.values[1:,1:]
 
-            line_read = csv.reader(f, delimiter=',')
-            next(line_read) #first line is header
-
-            # loop over all the lines, convert the string to float, and append to the list
-            for i, row in enumerate(line_read):
-                row_data = row[1:] #first column is header
-                lable = [float(i) for i in row_data]
-    
-                lable = torch.tensor(lable)
-                lable = torch.reshape(lable, (1,1))
-                if i == 0:
-                    lable_mat = lable 
-                else:
-                    lable_mat = torch.cat((lable_mat, lable), 0)  
-
-        target = lable_mat
+        target = lables
         input_data = feature_mat
 
 
-        return   target, input_data
+        return target, input_data
