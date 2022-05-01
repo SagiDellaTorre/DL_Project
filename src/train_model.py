@@ -87,7 +87,6 @@ class Pl_module(pl.LightningModule):
 
     def Loss(self,angleVAD,pred):
 
-        angleVAD = pred
         angle_pred = (1/360)*pred[:,:386,0]
         onesVec = torch.ones(angle_pred.shape)
         VAD_pred = pred[:,:386,1]
