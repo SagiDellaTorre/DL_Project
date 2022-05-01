@@ -18,6 +18,8 @@ warnings.filterwarnings("ignore", category=UserWarning)
 from pytorch_lightning.plugins import DDPPlugin
 np.set_printoptions(threshold=sys.maxsize)
 import soundfile as sf
+from pathlib import Path
+ROOT_PATH = Path(__file__).parent.parent
 # from data.metrics import *
 
 # ======================== Model section ===========================
@@ -85,6 +87,7 @@ class Pl_module(pl.LightningModule):
 
     def Loss(self,angleVAD,pred):
 
+        angleVAD = pred
         angle_pred = (1/360)*pred[:,:386,0]
         onesVec = torch.ones(angle_pred.shape)
         VAD_pred = pred[:,:386,1]
@@ -102,8 +105,9 @@ class Pl_module(pl.LightningModule):
         return loss
 
 # ======================================== main section ==================================================
-Hydra_path = "C:\\Users\\sagitorr\\Documents\\University\\Final_Project\\Project\\dl_project\\src\\conf\\"
+#Hydra_path = "C:\\Users\\sagitorr\\Documents\\University\\Final_Project\\Project\\dl_project\\src\\conf\\"
 #Hydra_path = "C:\\Users\\Dvir\\Desktop\\הנדסה\\שנה ד\\פרויקט גמר\\code\\DL_Project\\src\\conf"
+Hydra_path = str(ROOT_PATH) + "\\src\\conf"
 
 @hydra.main(config_path= Hydra_path,config_name="train.yaml")
 def main(args):
