@@ -58,5 +58,4 @@ class AudioPreProcessing():
         target = lables
         input_data = feature_mat
 
-
         return target, input_data
