@@ -55,7 +55,8 @@ class AudioPreProcessing():
         #convert to numpy and remove headers
         lables = x.values[1:,1:]
 
-        target = lables
+        target = torch.from_numpy(lables) # cast to torch tensor
+        target = torch.tensor(target,dtype=torch.float) # cast to float
         input_data = feature_mat
 
         return target, input_data

@@ -285,25 +285,25 @@ def signal_gen(data_folder, signals_num):
         sf.write(data_folder + 'RIR/fix_array/file_'+str(i)+'.wav',r_const,fs)
 
         # save labels output files to meta folder
-        header_fix = ['file_index','angle','mics_num','mics_radius','source_dist','rev_time','SNR_ratio']
-        data_fix = [file_index,angle,mics_num,mics_radius,source_dist,rev_time,SNR_ratio]
-        data_path_fix = data_folder + 'meta/random_array/file_meta.csv'
+        header_rand = ['file_index','angle','mics_num','mics_radius','source_dist','rev_time','SNR_ratio']
+        data_rand = [file_index,angle,mics_num,mics_radius,source_dist,rev_time,SNR_ratio]
+        data_path_rand = data_folder + 'meta/random_array/file_meta.csv'
 
-        header_rand = ['file_index','angle','mics_num_const','mics_radius_const','source_dist','rev_time','SNR_ratio']
-        data_rand = [file_index,angle,mics_num_const,mics_radius_const,source_dist,rev_time,SNR_ratio]
-        data_path_rand = data_folder + 'meta/fix_array/file_meta.csv'
+        header_fix = ['file_index','angle','mics_num_const','mics_radius_const','source_dist','rev_time','SNR_ratio']
+        data_fix = [file_index,angle,mics_num_const,mics_radius_const,source_dist,rev_time,SNR_ratio]
+        data_path_fix = data_folder + 'meta/fix_array/file_meta.csv'
 
         write_meta(header_fix,data_fix,data_path_fix,i)
         write_meta(header_rand, data_rand,data_path_rand,i)
 
         # save mics position output files to mics_position folder
-        header_fix = ['x','y','z']
-        data_fix = np.resize(r,(mics_num,3))
-        data_path_fix = data_folder + 'mics_position/random_array/file_'+str(i)+'.csv'
+        header_rand = ['x','y','z']
+        data_rand = np.resize(r,(mics_num,3))
+        data_path_rand = data_folder + 'mics_position/random_array/file_'+str(i)+'.csv'
 
-        header_rand = header_fix
-        data_rand = np.resize(r_const,(mics_num_const,3))
-        data_path_rand = data_folder + 'mics_position/fix_array/file_'+str(i)+'.csv'
+        header_fix = header_rand
+        data_fix = np.resize(r_const,(mics_num_const,3))
+        data_path_fix = data_folder + 'mics_position/fix_array/file_'+str(i)+'.csv'
 
         write_mics_position(header_fix,data_fix,data_path_fix)
         write_mics_position(header_rand, data_rand,data_path_rand)

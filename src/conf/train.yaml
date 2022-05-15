@@ -5,8 +5,8 @@ defaults:
 #  =========== data-sets ===============
 
 # Main dataset
-#data_set_path : C:\Users\Dvir\Desktop\הנדסה\שנה ד\פרויקט גמר\code\DL_Project\data\features
-data_set_path : C:\Users\sagitorr\Documents\University\Final_Project\Project\dl_project\data\features
+data_set_path : C:\Users\Dvir\Desktop\הנדסה\שנה ד\פרויקט גמר\code\DL_Project\data\features
+#data_set_path : C:\Users\sagitorr\Documents\University\Final_Project\Project\dl_project\data\features
 
 starting_point : 
   train: 0 
@@ -84,7 +84,7 @@ gpus : 'None'
 # ========================================= Hydra config ==============================================================
 hydra:
   run:
-    dir: C:/Users/sagitorr/Documents/University/Final_Project/Project/dl_project/models/${hydra.job.override_dirname}/${hydra.job.name}/
+    dir:  C:/Users/Dvir/Desktop/הנדסה/שנה ד/פרויקט גמר/code/DL_Project/models/${hydra.job.override_dirname}/${hydra.job.name}/
 
   job:
     name: 'Basic_run'
