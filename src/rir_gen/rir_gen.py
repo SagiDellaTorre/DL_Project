@@ -19,7 +19,7 @@ def input_file_name_change(data_folder, prefix_name):
     important: first need to check in the directory, that there is no file with the same name right now!
     """
 
-    files = os.listdir(data_folder)
+    files = [f for f in os.listdir(data_folder) if os.path.isfile(os.path.join(data_folder, f))]
 
     for index, file in enumerate(files):
         os.rename(os.path.join(data_folder, file), os.path.join(data_folder, ''.join([prefix_name, str(index + 1), '.flac'])))
