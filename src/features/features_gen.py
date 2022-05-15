@@ -1,8 +1,8 @@
 import preprocessing
 import os
 import sys
-sys.path.append('src/RIR_Gen')
-import RIR_Gen
+sys.path.append('src/rir_gen')
+import rir_gen
 import numpy as np
 import soundfile as sf
 import os
@@ -103,14 +103,14 @@ def features_gen(data_folder, features_folder):
     overlap = 512
 
     # create the directories, if they aren't exist
-    RIR_Gen.create_dirs([features_folder, features_folder + 'preprocessing1',features_folder + 'preprocessing2', features_folder + 'preprocessing3'])
+    rir_gen.create_dirs([features_folder, features_folder + 'preprocessing1',features_folder + 'preprocessing2', features_folder + 'preprocessing3', features_folder + 'lables'])
 
     # loop over all the files in the data folder
     files = os.listdir(data_folder + 'mics/random_array')
 
     for file in files:
 
-        print("generate features of tile: " + file)
+        print("generate features of file: " + file)
 
         record_name = file.rsplit('.',1)[0]
 
