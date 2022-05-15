@@ -10,6 +10,7 @@ import shutil
 sys.path.append('src/features')
 import gcc
 import pandas as pd
+import time
 # import matlab.engine as mt
 
 def input_file_name_change(data_folder, prefix_name):
@@ -156,6 +157,8 @@ def voice_activity_detection(signal, win_size = 1024, win_hop=512, threshold=-30
 
 def signal_gen(data_folder, signals_num):
 
+    number_of_oracle_files = signals_num
+
     # const array parameters and RIR
     mics_num_const = 6
     mics_radius_const = 6/100 #cm to m
@@ -195,14 +198,15 @@ def signal_gen(data_folder, signals_num):
 
     for i in range (signals_num):
 
-        print("Create file: " + str(i))
+        if i % 100 == 0:
+            print("Create file: " + str(i))
 
         # rand parameters
         angle = np.random.randint(1,361)
         mics_num = np.random.randint(4,13)
         mics_radius = np.random.randint(3,9)/100 #cm to m
         source_dist = np.random.randint(1,3)
-        file_index = np.random.randint(1,16)
+        file_index = np.random.randint(1, number_of_oracle_files + 1)
         rev_time  = np.random.randint(2,9)/10 # Reverberation time (s)  
         SNR_ratio = np.random.normal(18,3) #noraml distribution with mean of 18 and std of 3
         # SNR range is 0 to 40 dB
@@ -212,15 +216,15 @@ def signal_gen(data_folder, signals_num):
         # choose signal 
         signal_name = data_folder + 'oracle/file_' + str(file_index) + '.flac'
         pre_amp_signal, fs = sf.read(signal_name,always_2d=True)
-        Frame_num = 190
-        Frame_size = 1024
+        frame_num = 190
+        frame_size = 1024
 
-        while(pre_amp_signal.shape[0] < Frame_num*Frame_size):
-            file_index = np.random.randint(1,16)
-            signal_name = data_folder + 'oracle/file_' + str(file_index) + '.flac'
-            pre_amp_signal, fs = sf.read(signal_name,always_2d=True)
+        # if the signal is too short - fill it (cyclic)
+        while(pre_amp_signal.shape[0] < frame_num*frame_size):
+            pre_amp_signal = np.concatenate((pre_amp_signal, pre_amp_signal), axis = 0)
         
-        pre_amp_signal = pre_amp_signal[:Frame_num*Frame_size]
+        # if the signal is too long - cut it
+        pre_amp_signal = pre_amp_signal[:frame_num*frame_size]
 
         # Amplify the signal to max of 0.9
         signal = pre_amp_signal * 0.9 / max(pre_amp_signal)
@@ -317,13 +321,22 @@ def signal_gen(data_folder, signals_num):
 
 def main():
 
+    start = time.time()
+
     # change input file name to 'file_1.flac' - only at the first time
     change_input_file_name = False
     if change_input_file_name:
         input_file_name_change('data/oracle/', 'file_')
 
+    number_of_files_to_create = 2000
     # create the signal with rir generator
-    signal_gen("data/", 15)
+    signal_gen("data/", number_of_files_to_create)
+
+    # print run time
+    end = time.time()
+    time_sec = round(end - start)
+    time_min = round(time_sec / 60, 2)
+    print("Rir generator for " + str(number_of_files_to_create) + " files, took " + str(time_min) + " minutes.")
 
 if __name__ == '__main__':
 

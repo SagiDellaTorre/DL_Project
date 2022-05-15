@@ -9,6 +9,7 @@ import os
 import csv
 import pandas as pd
 import gcc
+import time
 
 def read_mics_position(data_path):
 
@@ -108,9 +109,10 @@ def features_gen(data_folder, features_folder):
     # loop over all the files in the data folder
     files = os.listdir(data_folder + 'mics/random_array')
 
-    for file in files:
+    for i, file in enumerate(files):
 
-        print("generate features of file: " + file)
+        if i % 100 == 0:
+            print("Generate features of file number: " + i)
 
         record_name = file.rsplit('.',1)[0]
 
@@ -151,7 +153,15 @@ def features_gen(data_folder, features_folder):
         
 def main():
 
+    start = time.time()
+
     features_gen("data/", "data/features/")
+
+    # print run time
+    end = time.time()
+    time_sec = round(end - start)
+    time_min = round(time_sec / 60, 2)
+    print("Features generator took " + str(time_min) + " minutes.")
 
 if __name__ == '__main__':
 
