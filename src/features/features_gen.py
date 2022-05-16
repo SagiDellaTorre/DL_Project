@@ -112,7 +112,7 @@ def features_gen(data_folder, features_folder):
     for i, file in enumerate(files):
 
         if i % 100 == 0:
-            print("Generate features of file number: " + i)
+            print("Generate features of file number: " + str(i))
 
         record_name = file.rsplit('.',1)[0]
 
