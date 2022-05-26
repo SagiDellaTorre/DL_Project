@@ -35,7 +35,7 @@ class DOA_Dataset(Dataset):
         self.args = args
         self.data_dir = data_dir
         self.batch_size = batch_size
-        self.os_listdir = os.listdir(self.data_dir+'\\preprocessing3')
+        self.os_listdir = os.listdir(self.data_dir+'/preprocessing3')
         self.audio_pre_process = AudioPreProcessing(self.args)
         self.starting_point = starting_point
         self.amount = amount

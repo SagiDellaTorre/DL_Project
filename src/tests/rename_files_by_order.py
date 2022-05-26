@@ -12,14 +12,12 @@ def rename_files_by_oreder(path):
         if os.path.exists(old_name):
             if i != new_index:
                 os.rename(old_name, new_name)
-            else:
-                new_index += 1
-        else:
-            continue
+            new_index += 1
 
 def main():
     
-    rename_files_by_oreder()
+    # path = "/home/dsi/dellats1/DL_Project/data/features/preprocessing1"
+    rename_files_by_oreder(path)
 
 if __name__ == '__main__':
 

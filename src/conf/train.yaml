@@ -9,13 +9,13 @@ data_set_path : \data\features
 
 starting_point : 
   train: 0 
-  val: 10
-  test: 0
+  val: 800
+  test: 900
 
 amount : 
-  train: 10 
-  val: 5
-  test: 0
+  train: 800
+  val: 100
+  test: 10
 
 # # For measurements in 'validation_epoch_end' stage
 # # for real recordings
@@ -83,7 +83,9 @@ gpus : 'None'
 # ========================================= Hydra config ==============================================================
 hydra:
   run:
-    dir:  C:/Users/Dvir/Desktop/הנדסה/שנה ד/פרויקט גמר/code/DL_Project/models/${hydra.job.override_dirname}/${hydra.job.name}/
+    # dir:  C:/Users/Dvir/Desktop/הנדסה/שנה ד/פרויקט גמר/code/DL_Project/models/${hydra.job.override_dirname}/${hydra.job.name}/
+    # dir: C:/Users/sagitorr/Documents/University/Final_Project/Project/dl_project/models/${hydra.job.override_dirname}/${hydra.job.name}/
+    dir: /home/dsi/dellats1/DL_Project/models/${hydra.job.override_dirname}/${hydra.job.name}/
 
   job:
     name: 'Basic_run'

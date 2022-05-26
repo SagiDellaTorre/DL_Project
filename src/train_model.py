@@ -116,21 +116,21 @@ def change_to_hard_path(path, arg_list):
 
 #Hydra_path = "C:\\Users\\sagitorr\\Documents\\University\\Final_Project\\Project\\dl_project\\src\\conf\\"
 #Hydra_path = "C:\\Users\\Dvir\\Desktop\\הנדסה\\שנה ד\\פרויקט גמר\\code\\DL_Project\\src\\conf"
-Hydra_path = str(ROOT_PATH) + "\\src\\conf"
+Hydra_path = str(ROOT_PATH) + "/src/conf"
 
 @hydra.main(config_path= Hydra_path,config_name="train.yaml")
 def main(args):
 # ====================== load config params from hydra ======================================
     # Storing the code in the model-folder
-    pl_checkpoints_path = os.getcwd() + '\\'
+    pl_checkpoints_path = os.getcwd() + '/'
 
     #change to hard path
     list = [args.data_set_path,args.path_wav]
     change_to_hard_path(str(ROOT_PATH), list)
 
     # save train_model.py and model_def.py files as part of hydra output
-    shutil.copy(hydra.utils.get_original_cwd() + '\\src\\train_model.py', 'save_train_model.py')
-    shutil.copy(hydra.utils.get_original_cwd() + '\\src\\models\\def_model.py', 'save_model_def.py')
+    shutil.copy(hydra.utils.get_original_cwd() + '/src/train_model.py', 'save_train_model.py')
+    shutil.copy(hydra.utils.get_original_cwd() + '/src/models/def_model.py', 'save_model_def.py')
     
     if args.debug_flag: # debug mode
         fast_dev_run=True
