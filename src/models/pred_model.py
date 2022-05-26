@@ -50,7 +50,6 @@ def main(args):
     model.to(device)
 
     # Run model files
-    #args.path_wav = '/data/ssd/ofersc/NN_AEC/data/external/Test/Synthetic/' # measurements=True
     args.path_wav = '/data/ssd/ofersc/datasets/Test/Synthetic/' # measurements=False
     
     #output_name = '_output_steered_rls.wav'
@@ -58,26 +57,16 @@ def main(args):
     #output_name = '_output_ideal_rls.wav'
     pred_model(args,model, output_name,save_output_files = True )
     
-    option = '_output_rls.wav'
-    #option = '_mic.wav'
-    results_model_mean = Measurments(args,option)
-    print(results_model_mean)
+    # option = '_output_rls.wav'
+    # #option = '_mic.wav'
+    # results_model_mean = Measurments(args,option)
+    # print(results_model_mean)
 
-    option = '_linear_CV.wav'
-    results_model_mean = Measurments(args,option)
-    print(results_model_mean)
-
-    results_echo_mos, results_deg_mos = aecmos(args,'output_steered_rls')
-    results_echo_mos, results_deg_mos = aecmos(args,'output_rls')
-    results_echo_mos, results_deg_mos = aecmos(args,'output_ideal_rls')
-    results_echo_mos, results_deg_mos = aecmos(args,'linear') # From clearvox
-    #results_echo_mos, results_deg_mos = aecmos(args,'cn')
-
-
-    # Run AEC_2022 Baseline algorithm    
-    # inference_aec_2022_baselain_algorithm(args)
+    # option = '_linear_CV.wav'
+    # results_model_mean = Measurments(args,option)
+    # print(results_model_mean)
 
 if __name__ == '__main__':
+
     main()
-    print('Done')
 
