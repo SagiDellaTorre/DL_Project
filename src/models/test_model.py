@@ -1,7 +1,6 @@
 from ast import arg
 import sys
-sys.path.append('/data/ssd/ofersc/NN_AEC/src/')
-#sys.path.append('/data/ssd/ofersc/NNֹ_AEC/AEC_2022/')
+sys.path.append('src/')
 
 import numpy as np
 import hydra
@@ -22,6 +21,8 @@ from collections import OrderedDict
 import glob
 import os
 from data.metrics import test_model
+from pathlib import Path
+ROOT_PATH = Path(__file__).parent.parent.parent
 epsilon = 1e-6
 
 class Pl_module(pl.LightningModule):
@@ -34,7 +35,7 @@ class Pl_module(pl.LightningModule):
         
 # ======================================== main section ==================================================
 
-Hydra_path = "/data/ssd/ofersc/NN_AEC/src/conf/"
+Hydra_path = str(ROOT_PATH) + "/src/conf"
 @hydra.main(config_path=Hydra_path,config_name="test.yaml")
 def main(args):
 
@@ -45,9 +46,6 @@ def main(args):
     model.to(device)
     # Run model on file
     test_model(args,model)
-    # Run AEC 2022 Baseline algorithm
-    #os.system("python enhance.py --data_dir /data/ssd/ofersc/NNֹ_AEC/Test/ --output_dir /data/ssd/ofersc/NNֹ_AEC/Test/")
-
 
 if __name__ == '__main__':
     main()
