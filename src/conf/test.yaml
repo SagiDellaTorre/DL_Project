@@ -52,7 +52,8 @@ sample_rate : 16000
 # # =============== ========================== Hydra config ==============================================================
 hydra:
   run:
-    dir: C:/Users/sagitorr/Documents/University/Final_Project/Project/dl_project/models/${hydra.job.override_dirname}/${hydra.job.name}/
+    #dir: C:/Users/sagitorr/Documents/University/Final_Project/Project/dl_project/models/${hydra.job.override_dirname}/${hydra.job.name}/
+    dir: /home/dsi/davidod8/DL_Project/models/${hydra.job.override_dirname}/${hydra.job.name}/
   job:
     name: 'Basic_rand_inputs+std'
     config:

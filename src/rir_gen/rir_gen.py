@@ -328,7 +328,7 @@ def main():
     if change_input_file_name:
         input_file_name_change('data/oracle/', 'file_')
 
-    number_of_files_to_create = 2000
+    number_of_files_to_create = 910
     # create the signal with rir generator
     signal_gen("data/", number_of_files_to_create)
 

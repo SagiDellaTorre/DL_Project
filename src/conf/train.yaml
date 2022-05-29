@@ -7,7 +7,8 @@ defaults:
 # Main dataset
 # data_set_path : C:/Users/Dvir/Desktop/הנדסה/שנה ד/פרויקט גמר/code/DL_Project/data/features
 # data_set_path : C:/Users/sagitorr/Documents/University/Final_Project/Project/dl_project/data/features
-data_set_path : /home/dsi/dellats1/DL_Project/data/features
+# data_set_path : /home/dsi/dellats1/DL_Project/data/features
+data_set_path : /home/dsi/davidod8/DL_Project/data/features
 
 starting_point : 
   train: 0 
@@ -79,18 +80,19 @@ epsilon : 1e-6
 num_workers : 10
 
 # ================ CUDA ======================
-gpus : 'None'
-# gpus : -1
-# cuda_visible_devices:  '0,1'
+# gpus : 'None'
+gpus : -1
+cuda_visible_devices:  '0,1'
 # ========================================= Hydra config ==============================================================
 hydra:
   run:
     # dir:  C:/Users/Dvir/Desktop/הנדסה/שנה ד/פרויקט גמר/code/DL_Project/models/${hydra.job.override_dirname}/${hydra.job.name}/
     # dir: C:/Users/sagitorr/Documents/University/Final_Project/Project/dl_project/models/${hydra.job.override_dirname}/${hydra.job.name}/
-    dir: /home/dsi/dellats1/DL_Project/models/${hydra.job.override_dirname}/${hydra.job.name}/
+    # dir: /home/dsi/dellats1/DL_Project/models/${hydra.job.override_dirname}/${hydra.job.name}/
+    dir: /home/dsi/davidod8/DL_Project/models/${hydra.job.override_dirname}/${hydra.job.name}/
 
   job:
-    name: 'Basic_run'
+    name: 'Basic_run_a0.7_b0.3'
     config:
       # configuration for the ${hydra.job.override_dirname} runtime variable
       override_dirname:

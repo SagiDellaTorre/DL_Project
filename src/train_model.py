@@ -100,8 +100,8 @@ class Pl_module(pl.LightningModule):
         angle_loss = torch.minimum(angle_loss,c)
         VAD_loss = self.criterion(VAD_pred,VAD_label)
         
-        alpha = 1
-        beta = 1
+        alpha = 0.7
+        beta = 0.3
         loss = alpha*angle_loss + beta*VAD_loss
         return loss
 
@@ -147,9 +147,9 @@ def main(args):
                         # gpus=args.gpus, 
                         # accelerator = 'ddp',
                         # fast_dev_run=fast_dev_run, 
-                        # check_val_every_n_epoch=args.check_val_every_n_epoch, 
-                        # default_root_dir= pl_checkpoints_path,                       
-                        # callbacks=[earlystopping_callback, checkpoint_callback], 
+                        check_val_every_n_epoch=args.check_val_every_n_epoch, 
+                        default_root_dir= pl_checkpoints_path,                       
+                        callbacks=[earlystopping_callback, checkpoint_callback], 
                         # log_gpu_memory=args.log_gpu_memory, 
                         # progress_bar_refresh_rate=args.progress_bar_refresh_rate,
                         # precision=32,
