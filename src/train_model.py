@@ -106,6 +106,14 @@ class Pl_module(pl.LightningModule):
         return loss
 
 # ======================================== main section ==================================================
+def change_to_hard_path(path, arg_list):
+    for i, arg in enumerate(arg_list):
+            arg_list[i] = path + arg
+    # for i in range(len(arg_list)):
+    #     arg_list[i] = path + str(arg_list[i])
+    
+    return
+
 #Hydra_path = "C:\\Users\\sagitorr\\Documents\\University\\Final_Project\\Project\\dl_project\\src\\conf\\"
 #Hydra_path = "C:\\Users\\Dvir\\Desktop\\הנדסה\\שנה ד\\פרויקט גמר\\code\\DL_Project\\src\\conf"
 Hydra_path = str(ROOT_PATH) + "/src/conf"
@@ -115,7 +123,11 @@ def main(args):
 # ====================== load config params from hydra ======================================
     # Storing the code in the model-folder
     pl_checkpoints_path = os.getcwd() + '/'
-    
+
+    #change to hard path
+    list = [args.data_set_path,args.path_wav]
+    change_to_hard_path(str(ROOT_PATH), list)
+
     # save train_model.py and model_def.py files as part of hydra output
     shutil.copy(hydra.utils.get_original_cwd() + '/src/train_model.py', 'save_train_model.py')
     shutil.copy(hydra.utils.get_original_cwd() + '/src/models/def_model.py', 'save_model_def.py')

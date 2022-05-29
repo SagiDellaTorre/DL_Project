@@ -4,8 +4,8 @@ defaults:
 
 #  =========== models and output path ===============
 ################ test ###########################
-mic_wav :  '/data/ssd/ofersc/NN_AEC/data/external/Test/real/zoIYIrOd5EetyP2c80g_Xg_doubletalk_mic.wav'
-ref_wav :  '/data/ssd/ofersc/NN_AEC/data/external/Test/real/zoIYIrOd5EetyP2c80g_Xg_doubletalk_lpb.wav'
+target_wav : 'C:/Users/sagitorr/Documents/University/Final_Project/Project/dl_project/data/features/lables/file_13.csv'
+feature_wav : 'C:/Users/sagitorr/Documents/University/Final_Project/Project/dl_project/data/features/preprocessing3/file_13.csv'
 #Output_saving_directory_single_test : '/data/ssd/ofersc/NNֹ_AEC/Test/real/'
 
 # # For testing directory of files with measurements 
@@ -31,11 +31,7 @@ debug_flag: True
 # Model 
 #infer_from_ckpt : /data/ssd/ofersc/NN_AEC/models/Basic_model/lightning_logs/version_0/checkpoints/last.ckpt # MMSE ON IRM LOSS
 #infer_from_ckpt : /data/ssd/ofersc/NN_AEC/models/Basic_model_snr_loss/lightning_logs/version_1/checkpoints/last.ckpt # SNR LOSS
-#infer_from_ckpt : /data/ssd/ofersc/NN_AEC/models/Basic_model_snr_loss_normalization/lightning_logs/version_12/checkpoints/last.ckpt # SNR LOSS + Normalization 
-#infer_from_ckpt : /data/ssd/ofersc/NN_AEC/models/Basic_model_snr_loss_normalization_dt/lightning_logs/version_7/checkpoints/last.ckpt # SNR LOSS + Normalization + dt 
-#infer_from_ckpt : /data/ssd/ofersc/NN_AEC/models/Basic_rand_inputs/lightning_logs/version_6/checkpoints/last.ckpt # SNR LOSS + Normalization + dt + rand inputs
-#infer_from_ckpt : /data/ssd/ofersc/NN_AEC/models/Basic_rand_inputs+std/lightning_logs/version_7/checkpoints/last.ckpt # SNR LOSS + Normalization + dt + rand inputs
-infer_from_ckpt :  /data/ssd/ofersc/NN_AEC/models/Basic_rand_inputs_20000/lightning_logs/version_30/checkpoints/last.ckpt # SNR LOSS + Normalization + dt + rand inputs
+infer_from_ckpt :  C:/Users/sagitorr/Documents/University/Final_Project/Project/dl_project/models/Basic_run/lightning_logs/version_100/checkpoints/epoch=51-step=5200.ckpt 
 test_mode : True
 train_mode : False
 
@@ -49,6 +45,7 @@ window_size: 1024
 overlap: 512
 number_of_direction : 36
 sample_rate : 16000
+frequency_num : 513
 # # =============== ========================== Hydra config ==============================================================
 hydra:
   run:
