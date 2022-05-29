@@ -100,8 +100,8 @@ class Pl_module(pl.LightningModule):
         angle_loss = torch.minimum(angle_loss,c)
         VAD_loss = self.criterion(VAD_pred,VAD_label)
         
-        alpha = 0.7
-        beta = 0.3
+        alpha = 0.99
+        beta = 0.01
         loss = alpha*angle_loss + beta*VAD_loss
         return loss
 
