@@ -39,13 +39,22 @@ Hydra_path = str(ROOT_PATH) + "/src/conf"
 @hydra.main(config_path=Hydra_path,config_name="test.yaml")
 def main(args):
 
+    path = str(ROOT_PATH)
+    
     # Model definition 
     model_type = GRU()
     model = Pl_module(model_type)
-    model = model.load_from_checkpoint(model=model_type,checkpoint_path =args.infer_from_ckpt)
-    model.to(device)
-    # Run model on file
-    test_model(args,model)
+    
+    for ckpt_file in args.infer_from_ckpt:
+    
+        ckpt_file_path = path + ckpt_file
+        model_name = ckpt_file.split('/')[2]
+
+        model = model.load_from_checkpoint(model=model_type,checkpoint_path = ckpt_file_path)
+        model.to(device)
+        
+        # Run model on file
+        test_model(args,model, model_name)
 
 if __name__ == '__main__':
     main()

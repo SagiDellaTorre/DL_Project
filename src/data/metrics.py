@@ -9,11 +9,15 @@ from data.data_utils import AudioPreProcessing
 from pathlib import Path
 ROOT_PATH = Path(__file__).parent.parent.parent
 
-def tests(args,output,mic,speech,results_model):
+def create_dirs(dirs_list):
+    """
+    create the directories, if they aren't exist
+    """
+    for directory in dirs_list:
+        if not os.path.exists(directory):
+            os.makedirs(directory)
 
-    pass
-
-def inference(args,audio_pre_process,model,target_wav,feature_wav):
+def inference(args,audio_pre_process,model,target_wav,feature_wav, model_name, file_name):
 
     #device = torch.device('cuda:{:d}'.format(next(model.parameters()).device.index)) if torch.cuda.is_available() else 'cpu'
 
@@ -21,35 +25,33 @@ def inference(args,audio_pre_process,model,target_wav,feature_wav):
 
     if torch.cuda.is_available():
         input_data = input_data.to(torch.device('cuda'))
-        mic = mic.to(torch.device('cuda'))
 
     pred = model(torch.unsqueeze(input_data, 0))
 
-    if 1:
-        #Visualize spectogram
-        fig, axs = plt.subplots(2, 1, constrained_layout=True)   
-        fig.suptitle('NN predictions') 
+    create_dirs([str(ROOT_PATH) + args.reports_directory + 'figures/' + model_name])
 
-        axs[0].plot(range(target.shape[0]), target[:,1], label="target")
-        axs[0].plot(range(target.shape[0]), pred[0,:,1], label="prediction")
-        axs[0].set_title('VAD figure')
-        axs[0].set_xlabel('Frame')
-        axs[0].set_ylabel('VAD')
-        axs[0].legend()
+    #Visualize spectogram
+    fig, axs = plt.subplots(2, 1, constrained_layout=True)   
+    fig.suptitle('NN predictions') 
 
-        axs[1].plot(range(target.shape[0]), target[:,0], label="target")
-        axs[1].plot(range(target.shape[0]), pred[0,:,0]*360, label="prediction")
-        axs[1].plot(range(target.shape[0]), target[:,1]*100, label="VAD")
-        axs[1].set_title('Angle figure')
-        axs[1].set_xlabel('Frame')
-        axs[1].set_ylabel('Angle')
-        axs[1].legend()
+    axs[0].plot(range(target.shape[0]), target[:,1], label="target")
+    axs[0].plot(range(target.shape[0]), pred[0,:,1], label="prediction")
+    axs[0].set_title('VAD figure')
+    axs[0].set_xlabel('Frame')
+    axs[0].set_ylabel('VAD')
+    axs[0].legend()
 
-        plt.savefig(str(ROOT_PATH) + '/reports/figures/temp.png')
-        plt.show()
-        plt.close()
+    axs[1].plot(range(target.shape[0]), target[:,0], label="target")
+    axs[1].plot(range(target.shape[0]), pred[0,:,0]*360, label="prediction")
+    axs[1].plot(range(target.shape[0]), target[:,1]*100, label="VAD")
+    axs[1].set_title('Angle figure')
+    axs[1].set_xlabel('Frame')
+    axs[1].set_ylabel('Angle')
+    axs[1].legend()
 
-    return target
+    plt.savefig(str(ROOT_PATH) + args.reports_directory + 'figures/' + model_name + '/' + file_name + '.png')
+
+    return 
 
 def pred_model(args,model,output_name,save_output_files):
     
@@ -87,53 +89,27 @@ def pred_model(args,model,output_name,save_output_files):
                 
     return 
 
-def Measurments(args,option):
-    # filelist_mic = os.listdir(args.path_mic_wav)
-    # filelist_ref = os.listdir(args.path_ref_wav)
-    # filelist_speech = os.listdir(args.path_speech_wav)
-
-    filelist = os.listdir(args.path_wav)
-    filelist_mic = list()
-    for file in filelist:
-        if file.endswith('mic.wav'):
-            filelist_mic.append(file)
-
-    results_model = {"LLR":[],"CD":[],"aws_seg_snr":[],"PESQ":[],"ERLE":[]}
-
-    with torch.no_grad():
-        for x in range(len(filelist_mic)):
-            tmp = filelist_mic[x]
-            mic_wav = args.path_wav + tmp
-            ref_wav = args.path_wav + tmp[0:-8] + '_lpb.wav'
-
-            
-            # Measurements: 
-            mic,_ = soundfile.read(mic_wav)
-            speech_wav = args.path_wav + tmp[0:-8] + '_target.wav'
-            speech,_ = soundfile.read(speech_wav)
-
-            #output_wav = args.path_wav + tmp[0:-8] + 'linear_CV.wav'
-            output_wav = args.path_wav + tmp[0:-8] + option
-            output,_ = soundfile.read(output_wav)
-
-            results_model = tests(args,output,mic,speech,results_model)
-
-    results_model_mean=0
-    results_model_mean = {k:sum(x)/len(x) for k,x in results_model.items()}
-
-    return results_model_mean
-
-def test_model(args,model):
+def test_model(args, model, model_name):
 
     model = model.eval()
     #os.makedirs(os.getcwd()+'/test_results/', exist_ok=True)
 
+    starting_point = int(args.test.starting_point)
+    amount = int(args.test.amount)
     audio_pre_process = AudioPreProcessing(args)
+
     with torch.no_grad():
 
-        output = inference(args,audio_pre_process,model, args.target_wav, args.feature_wav)
+        for i in range(starting_point, starting_point + amount):
 
-        # write output file
-        # write(output_file_generated, args.sample_rate, (output*2**15).cpu().numpy().T.astype(np.int16)) 
+            path = str(ROOT_PATH)
+            file_name = "file_" +  str(i)
+            target_file = path + args.data_set_path + "/lables/" + file_name + ".csv"
+            feature_file = path + args.data_set_path + "/preprocessing3/" + file_name + ".csv"
+
+            output = inference(args,audio_pre_process,model, target_file, feature_file, model_name, file_name)
+
+            # write output file
+            # write(output_file_generated, args.sample_rate, (output*2**15).cpu().numpy().T.astype(np.int16)) 
         
     return
