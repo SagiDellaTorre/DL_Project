@@ -17,26 +17,7 @@ amount :
   val: 100
   test: 10
 
-# # For measurements in 'validation_epoch_end' stage
-# # for real recordings
-path_wav : '/data/ssd/ofersc/datasets/Test/real/'
-
-# #aecmos: 
-# input_aecmos : '/data/ssd/ofersc/NN_AEC/data/external/Test/real/'
-# dataset_aecmos : '/data/ssd/ofersc/NN_AEC/data/external/Test/real/'
-# score_file_aecmos : '/data/ssd/ofersc/NN_AEC/data/external/Test/real/'
-
-# path_mic_wav : '/data/ssd/ofersc/NN_AEC/data/AEC_challenge/nearend_mic_signal/'
-# path_ref_wav : '/data/ssd/ofersc/NN_AEC/data/AEC_challenge/farend_speech_aligned/'
-# path_speech_wav : '/data/ssd/ofersc/NN_AEC/data/AEC_challenge/nearend_speech_scaled/'
-
-# data_dir : 
-  # train: ${data_set_path}/train/aud_files/
-  # val  : ${data_set_path}/val/aud_files/
-  # test : ${data_set_path}/test/aud_files/
-
 # =============== DEBUG ===============
-# debug_flag: False
 debug_flag: True
 
 # =============== data HP ===============
@@ -45,6 +26,7 @@ overlap : 512
 number_of_direction : 36
 sample_rate : 16000
 frequency_num : 513
+
 # =========== Model HP ==============
 
 train_batch_size : 8
@@ -57,6 +39,7 @@ data_loader_shuffle : True
 optimizer : Adam
 learning_rate : 1e-4
 predict_mode : False
+
 # ======== Criterion ==========
 
 criterion : MSELoss # MSEloss #L1loss
