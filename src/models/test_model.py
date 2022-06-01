@@ -63,9 +63,9 @@ def main(args):
         ckpt_name = names_list[-1].split('.')[0]
 
         create_dirs(
-            [str(ROOT_PATH) + args.reports_directory + 'figures/' + model_name,
-            str(ROOT_PATH) + args.reports_directory + 'figures/' + model_name + '/' + version_num,
-            str(ROOT_PATH) + args.reports_directory + 'figures/' + model_name + '/' + version_num + '/' + ckpt_name]
+            [str(ROOT_PATH) + '/' + args.reports_directory + 'figures/' + model_name,
+            str(ROOT_PATH) + '/' + args.reports_directory + 'figures/' + model_name + '/' + version_num,
+            str(ROOT_PATH) + '/' + args.reports_directory + 'figures/' + model_name + '/' + version_num + '/' + ckpt_name]
         )
         report_dir = str(ROOT_PATH) + '/' + args.reports_directory + 'figures/' + model_name + '/' + version_num + '/' + ckpt_name + '/'
 
