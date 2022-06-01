@@ -17,7 +17,7 @@ def create_dirs(dirs_list):
         if not os.path.exists(directory):
             os.makedirs(directory)
 
-def inference(args,audio_pre_process,model,target_wav,feature_wav, model_name, file_name):
+def inference(args, audio_pre_process, model, target_wav, feature_wav, report_dir, file_name):
 
     #device = torch.device('cuda:{:d}'.format(next(model.parameters()).device.index)) if torch.cuda.is_available() else 'cpu'
 
@@ -28,7 +28,6 @@ def inference(args,audio_pre_process,model,target_wav,feature_wav, model_name, f
 
     pred = model(torch.unsqueeze(input_data, 0))
 
-    create_dirs([str(ROOT_PATH) + args.reports_directory + 'figures/' + model_name])
 
     #Visualize spectogram
     fig, axs = plt.subplots(2, 1, constrained_layout=True)   
@@ -49,7 +48,7 @@ def inference(args,audio_pre_process,model,target_wav,feature_wav, model_name, f
     axs[1].set_ylabel('Angle')
     axs[1].legend()
 
-    plt.savefig(str(ROOT_PATH) + args.reports_directory + 'figures/' + model_name + '/' + file_name + '.png')
+    plt.savefig(report_dir + file_name + '.png')
 
     return 
 
@@ -89,10 +88,9 @@ def pred_model(args,model,output_name,save_output_files):
                 
     return 
 
-def test_model(args, model, model_name):
+def test_model(args, model, report_dir):
 
     model = model.eval()
-    #os.makedirs(os.getcwd()+'/test_results/', exist_ok=True)
 
     starting_point = int(args.test.starting_point)
     amount = int(args.test.amount)
@@ -104,10 +102,10 @@ def test_model(args, model, model_name):
 
             path = str(ROOT_PATH)
             file_name = "file_" +  str(i)
-            target_file = path + args.data_set_path + "/lables/" + file_name + ".csv"
-            feature_file = path + args.data_set_path + "/preprocessing3/" + file_name + ".csv"
+            target_file = path + '/' + args.data_set_path + "lables/" + file_name + ".csv"
+            feature_file = path + '/' + args.data_set_path + "preprocessing3/" + file_name + ".csv"
 
-            output = inference(args,audio_pre_process,model, target_file, feature_file, model_name, file_name)
+            output = inference(args, audio_pre_process, model, target_file, feature_file, report_dir, file_name)
 
             # write output file
             # write(output_file_generated, args.sample_rate, (output*2**15).cpu().numpy().T.astype(np.int16)) 

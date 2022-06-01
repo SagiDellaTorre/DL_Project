@@ -25,6 +25,14 @@ from pathlib import Path
 ROOT_PATH = Path(__file__).parent.parent.parent
 epsilon = 1e-6
 
+def create_dirs(dirs_list):
+    """
+    create the directories, if they aren't exist
+    """
+    for directory in dirs_list:
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
 class Pl_module(pl.LightningModule):
     def __init__(self, model):
         super().__init__()
@@ -47,14 +55,25 @@ def main(args):
     
     for ckpt_file in args.infer_from_ckpt:
     
-        ckpt_file_path = path + ckpt_file
-        model_name = ckpt_file.split('/')[2]
+        # directory naming
+        ckpt_file_path = path + '/' + ckpt_file
+        names_list = ckpt_file.split('/')
+        model_name = names_list[names_list.index("models") + 1]
+        version_num = names_list[names_list.index("models") + 3]
+        ckpt_name = names_list[-1].split('.')[0]
 
-        model = model.load_from_checkpoint(model=model_type,checkpoint_path = ckpt_file_path)
+        create_dirs(
+            [str(ROOT_PATH) + args.reports_directory + 'figures/' + model_name,
+            str(ROOT_PATH) + args.reports_directory + 'figures/' + model_name + '/' + version_num,
+            str(ROOT_PATH) + args.reports_directory + 'figures/' + model_name + '/' + version_num + '/' + ckpt_name]
+        )
+        report_dir = str(ROOT_PATH) + '/' + args.reports_directory + 'figures/' + model_name + '/' + version_num + '/' + ckpt_name + '/'
+
+        model = model.load_from_checkpoint(model=model_type, checkpoint_path = ckpt_file_path)
         model.to(device)
         
         # Run model on file
-        test_model(args,model, model_name)
+        test_model(args, model, report_dir)
 
 if __name__ == '__main__':
     main()
