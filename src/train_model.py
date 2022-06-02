@@ -126,7 +126,7 @@ def main(args):
         os.environ["CUDA_VISIBLE_DEVICES"] = '0'
     else: # training mode
         fast_dev_run=False
-        os.environ["CUDA_VISIBLE_DEVICES"] = str(args.cuda_visible_devices)
+        os.environ["CUDA_VISIBLE_DEVICES"] = args.cuda_visible_devices
 
 # ============================= main section =============================================
 
@@ -152,10 +152,10 @@ def main(args):
                         default_root_dir= pl_checkpoints_path,                       
                         callbacks=[earlystopping_callback, checkpoint_callback], 
                         # log_gpu_memory=args.log_gpu_memory, 
-                        # progress_bar_refresh_rate=args.progress_bar_refresh_rate,
+                        progress_bar_refresh_rate=args.progress_bar_refresh_rate,
                         # precision=32,
                         # plugins=DDPPlugin(find_unused_parameters=False),
-                        # num_sanity_val_steps = 0
+                        num_sanity_val_steps = 0
                      )
 
     data_module = DataModule(args)
