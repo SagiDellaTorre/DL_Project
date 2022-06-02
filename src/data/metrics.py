@@ -42,7 +42,7 @@ def inference(args, audio_pre_process, model, target_wav, feature_wav, report_di
 
     axs[1].plot(range(target.shape[0]), target[:,0], label="target")
     axs[1].plot(range(target.shape[0]), pred[0,:,0]*360, label="prediction")
-    axs[1].plot(range(target.shape[0]), target[:,1]*100, label="VAD")
+    axs[1].plot(range(target.shape[0]), target[:,1]*360, label="VAD")
     axs[1].set_title('Angle figure')
     axs[1].set_xlabel('Frame')
     axs[1].set_ylabel('Angle')
