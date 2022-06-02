@@ -152,7 +152,7 @@ def main(args):
                         default_root_dir= pl_checkpoints_path,                       
                         callbacks=[earlystopping_callback, checkpoint_callback], 
                         # log_gpu_memory=args.log_gpu_memory, 
-                        progress_bar_refresh_rate=args.progress_bar_refresh_rate,
+                        # progress_bar_refresh_rate=args.progress_bar_refresh_rate,
                         # precision=32,
                         # plugins=DDPPlugin(find_unused_parameters=False),
                         num_sanity_val_steps = 0
