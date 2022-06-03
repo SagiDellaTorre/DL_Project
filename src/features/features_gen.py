@@ -107,7 +107,10 @@ def features_gen(data_folder, features_folder):
     rir_gen.create_dirs([features_folder, features_folder + 'preprocessing1',features_folder + 'preprocessing2', features_folder + 'preprocessing3', features_folder + 'lables'])
 
     # loop over all the files in the data folder
-    files = os.listdir(data_folder + 'mics/random_array')
+    if data_folder == "data/":
+        files = os.listdir(data_folder + 'mics/random_array')
+    else:
+        files = os.listdir(data_folder + 'mics/fix_array')
 
     for i, file in enumerate(files):
 
@@ -116,10 +119,12 @@ def features_gen(data_folder, features_folder):
 
         record_name = file.rsplit('.',1)[0]
 
-        signal, samplerate = sf.read(data_folder + 'mics/random_array/' + file)
-        signal_const, _ = sf.read(data_folder + 'mics/fix_array/' + record_name + '.wav')
+        if data_folder == "data/":
+            signal, samplerate = sf.read(data_folder + 'mics/random_array/' + file)
+        signal_const, samplerate = sf.read(data_folder + 'mics/fix_array/' + record_name + '.wav')
 
-        mics_position = read_mics_position(data_folder + 'mics_position/random_array/' + record_name + '.csv')
+        if data_folder == "data/":
+            mics_position = read_mics_position(data_folder + 'mics_position/random_array/' + record_name + '.csv')
         mics_position_const = read_mics_position(data_folder + 'mics_position/fix_array/' + record_name + '.csv')
 
         # preprocessing 1 - time
@@ -132,23 +137,36 @@ def features_gen(data_folder, features_folder):
         write_feature(time_pp_matrix,features_folder + 'preprocessing1/' + record_name + '.csv', number_of_direction, type = "time")
 
         # preprocessing 2 - correlation
-        correlation_pp_matrix = preprocessing.signal_preprocessing(
+        if data_folder == "data/":
+            correlation_pp_matrix = preprocessing.signal_preprocessing(
             signal, mics_position, number_of_direction, samplerate, frame_size, overlap, type = "correlation"
+            )
+        else:
+            correlation_pp_matrix = preprocessing.signal_preprocessing(
+            signal_const, mics_position_const, number_of_direction, samplerate, frame_size, overlap, type = "correlation"
             )
         # reshape the data: from 3D: (num_of_frames, 1, number_of_direction)
         # to 2D (num_of_frames, 1 * number_of_direction)
         write_feature(correlation_pp_matrix,features_folder + 'preprocessing2/' + record_name + '.csv', number_of_direction, type = "correlation")
         
         # preprocessing 3 - spectrum
-        spectrum_pp_matrix = preprocessing.signal_preprocessing(
+        if data_folder == "data/":
+            spectrum_pp_matrix = preprocessing.signal_preprocessing(
             signal, mics_position, number_of_direction, samplerate, frame_size, overlap, type = "spectrum"
+            )
+        else:
+            spectrum_pp_matrix = preprocessing.signal_preprocessing(
+            signal_const, mics_position_const, number_of_direction, samplerate, frame_size, overlap, type = "spectrum"
             )
         # reshape the data: from 3D: (num_of_frames, num_of_frequency, number_of_direction)
         # to 2D (num_of_frames, num_of_frequency * number_of_direction)
         write_feature(spectrum_pp_matrix,features_folder + 'preprocessing3/' + record_name + '.csv', number_of_direction, type = "spectrum")
 
         # create lables
-        VAD_lables = read_VAD_lables(data_folder + 'VAD_lables/random_array/' + record_name + '.csv')
+        if data_folder == "data/":
+            VAD_lables = read_VAD_lables(data_folder + 'VAD_lables/random_array/' + record_name + '.csv')
+        else:
+            VAD_lables = read_VAD_lables(data_folder + 'VAD_lables/fix_array/' + record_name + '.csv')
         write_lables(VAD_lables, features_folder + 'lables/' + record_name + '.csv', frame_size, overlap)
         
 def main():
@@ -156,6 +174,7 @@ def main():
     start = time.time()
 
     features_gen("data/", "data/features/")
+    features_gen("data/test/", "data/test/features/")
 
     # print run time
     end = time.time()
