@@ -145,7 +145,7 @@ def main(args):
 
     trainer = Trainer(  
                         gpus=args.gpus, 
-                        # accelerator = 'ddp',
+                        accelerator = 'ddp',
                         # fast_dev_run=fast_dev_run, 
                         check_val_every_n_epoch=args.check_val_every_n_epoch, 
                         default_root_dir= pl_checkpoints_path,                       
@@ -153,7 +153,7 @@ def main(args):
                         # log_gpu_memory=args.log_gpu_memory, 
                         # progress_bar_refresh_rate=args.progress_bar_refresh_rate,
                         # precision=32,
-                        # plugins=DDPPlugin(find_unused_parameters=False),
+                        plugins=DDPPlugin(find_unused_parameters=False),
                         num_sanity_val_steps = 0
                      )
 
