@@ -88,21 +88,20 @@ class Pl_module(pl.LightningModule):
     def Loss(self,angleVAD,pred):
 
         angle_pred = pred[:,:386,0]
-        onesVec = torch.ones(angle_pred.shape)
         VAD_pred = pred[:,:386,1]
         angle_label = (1/360)*angleVAD[:,:386,0]
         VAD_label = angleVAD[:,:386,1]
 
-        a = self.criterion(angle_pred*VAD_label,angle_label*VAD_label)
-        b = self.criterion((angle_pred+onesVec)*VAD_label,angle_label*VAD_label)
-        c = self.criterion(angle_pred*VAD_label,(angle_label+onesVec)*VAD_label)
+        a = self.criterion(VAD_label * angle_pred,VAD_label * angle_label)
+        b = self.criterion(VAD_label * (angle_pred+1),VAD_label * angle_label)
+        c = self.criterion(VAD_label * angle_pred,VAD_label * (angle_label+1))
         angle_loss =torch.minimum(a,b)
         angle_loss = torch.minimum(angle_loss,c)
         VAD_loss = self.criterion(VAD_pred,VAD_label)
         
-        alpha = 0.99
-        beta = 0.01
-        loss = alpha*angle_loss + beta*VAD_loss
+        alpha = 0.5
+        beta = 0.5
+        loss = alpha * angle_loss + beta * VAD_loss
         return loss
 
 Hydra_path = str(ROOT_PATH) + "/src/conf"
@@ -145,14 +144,14 @@ def main(args):
                                             patience = args.patience)
 
     trainer = Trainer(  
-                        # gpus=args.gpus, 
+                        gpus=args.gpus, 
                         # accelerator = 'ddp',
                         # fast_dev_run=fast_dev_run, 
                         check_val_every_n_epoch=args.check_val_every_n_epoch, 
                         default_root_dir= pl_checkpoints_path,                       
                         callbacks=[earlystopping_callback, checkpoint_callback], 
                         # log_gpu_memory=args.log_gpu_memory, 
-                        progress_bar_refresh_rate=args.progress_bar_refresh_rate,
+                        # progress_bar_refresh_rate=args.progress_bar_refresh_rate,
                         # precision=32,
                         # plugins=DDPPlugin(find_unused_parameters=False),
                         num_sanity_val_steps = 0
