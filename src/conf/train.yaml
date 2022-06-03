@@ -18,7 +18,7 @@ amount :
   test: 10
 
 # =============== DEBUG ===============
-debug_flag: True
+debug_flag: False
 
 # =============== data HP ===============
 window_size : 1024
@@ -66,13 +66,10 @@ cuda_visible_devices:  '0,1'
 # ========================================= Hydra config ==============================================================
 hydra:
   run:
-    # dir:  C:/Users/Dvir/Desktop/הנדסה/שנה ד/פרויקט גמר/code/DL_Project/models/${hydra.job.override_dirname}/${hydra.job.name}/
-    # dir: C:/Users/sagitorr/Documents/University/Final_Project/Project/dl_project/models/${hydra.job.override_dirname}/${hydra.job.name}/
-    # dir: /home/dsi/dellats1/DL_Project/models/${hydra.job.override_dirname}/${hydra.job.name}/
-    dir: /home/dsi/davidod8/DL_Project/models/${hydra.job.override_dirname}/${hydra.job.name}/
+    dir: models/${hydra.job.override_dirname}/${hydra.job.name}/
 
   job:
-    name: 'Basic_run_a0.99_b0.01'
+    name: 'Basic_run'
     config:
       # configuration for the ${hydra.job.override_dirname} runtime variable
       override_dirname:
