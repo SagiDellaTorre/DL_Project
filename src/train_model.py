@@ -92,13 +92,12 @@ class Pl_module(pl.LightningModule):
         angle_label = (1/360)*angleVAD[:,:386,0]
         VAD_label = angleVAD[:,:386,1]
 
-        a = self.criterion(VAD_label * angle_pred,VAD_label * angle_label)
-        b = self.criterion(VAD_label * (angle_pred+1),VAD_label * angle_label)
-        c = self.criterion(VAD_label * angle_pred,VAD_label * (angle_label+1))
-        angle_loss =torch.minimum(a,b)
-        angle_loss = torch.minimum(angle_loss,c)
-        VAD_loss = self.criterion(VAD_pred,VAD_label)
-        
+        # pred angle: take the minimum between the angle to (360 + angle). take the closet to the label.
+        angle_pred = torch.minimum(abs(angle_pred-angle_label), 1 - abs(angle_pred-angle_label)) + angle_label
+        angle_loss = self.criterion(VAD_label * angle_pred, VAD_label * angle_label)
+
+        VAD_loss = self.criterion(VAD_pred, VAD_label)
+
         alpha = 0.5
         beta = 0.5
         loss = alpha * angle_loss + beta * VAD_loss
