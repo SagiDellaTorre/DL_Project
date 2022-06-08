@@ -155,9 +155,7 @@ def voice_activity_detection(signal, win_size = 1024, win_hop=512, threshold=-30
 
     return VAD_array
 
-def signal_gen(data_folder, signals_num):
-
-    number_of_oracle_files = signals_num
+def signal_gen(data_folder, signals_num, number_of_oracle_files):
 
     # const array parameters and RIR
     mics_num_const = 6
@@ -328,9 +326,10 @@ def main():
     if change_input_file_name:
         input_file_name_change('data/oracle/', 'file_')
 
-    number_of_files_to_create = 910
+    number_of_files_to_create = 10000
+    number_of_oracle_files = 2700
     # create the signal with rir generator
-    signal_gen("data/", number_of_files_to_create)
+    signal_gen("/dsi/gannot-lab/datasets/doa_features_db/data/", number_of_files_to_create, number_of_oracle_files)
 
     # print run time
     end = time.time()
