@@ -8,18 +8,18 @@ defaults:
 # target files:  <data_set_path> + /lables/ + file_<starting_points>.csv
 # feature files: <data_set_path> + /preprocessing3/ + file_<starting_points>.csv
 
-data_set_path : 'data/test/features/'
+data_set_path : 'data/RECtest/features/'
 
 test: 
   starting_point : 0
-  amount : 10
+  amount : 14
 
 # Model - list of model for testing
 infer_from_ckpt :
   - models/Basic_run_a0.5_b0.5/lightning_logs/version_1/checkpoints/epoch=99-val_loss=0.03.ckpt 
 
 #output report directory
-reports_directory : 'reports/test/'
+reports_directory : 'reports/RECtest/'
 
 test_mode : True
 train_mode : False

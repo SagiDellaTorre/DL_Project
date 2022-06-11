@@ -174,7 +174,7 @@ def main():
     start = time.time()
 
     features_gen("data/", "data/features/")
-    features_gen("data/test/", "data/test/features/")
+    features_gen("data/RECtest/", "data/RECtest/features/")
 
     # print run time
     end = time.time()
