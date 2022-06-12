@@ -98,9 +98,7 @@ class Pl_module(pl.LightningModule):
 
         VAD_loss = self.criterion(VAD_pred, VAD_label)
 
-        alpha = 0.5
-        beta = 0.5
-        loss = alpha * angle_loss + beta * VAD_loss
+        loss = self.args.angle_loss_ratio * angle_loss + (1 - self.args.angle_loss_ratio) * VAD_loss
         return loss
 
 Hydra_path = str(ROOT_PATH) + "/src/conf"

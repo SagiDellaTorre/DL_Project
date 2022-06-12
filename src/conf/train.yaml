@@ -43,6 +43,7 @@ predict_mode : False
 # ======== Criterion ==========
 
 criterion : MSELoss # MSEloss #L1loss
+angle_loss_ratio : 0.7
 
 # ========= ModelCheckPoints =========
 
@@ -69,7 +70,7 @@ hydra:
     dir: models/${hydra.job.override_dirname}/${hydra.job.name}/
 
   job:
-    name: 'Basic_run'
+    name: 'Basic_run_angleLossRatio_${angle_loss_ratio}'
     config:
       # configuration for the ${hydra.job.override_dirname} runtime variable
       override_dirname:
