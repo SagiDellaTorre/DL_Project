@@ -97,7 +97,7 @@ def write_lables(VAD_lables, lables_file_path, frame_size, overlap):
     df = pd.DataFrame(lables)
     df.to_csv(lables_file_path, index=True)
 
-def features_gen(data_folder, features_folder):
+def features_gen(data_folder, features_folder, is_test = False):
 
     number_of_direction = 36
     frame_size = 1024
@@ -107,7 +107,7 @@ def features_gen(data_folder, features_folder):
     rir_gen.create_dirs([features_folder, features_folder + 'preprocessing1',features_folder + 'preprocessing2', features_folder + 'preprocessing3', features_folder + 'lables'])
 
     # loop over all the files in the data folder
-    if data_folder == "data/":
+    if not is_test:
         files = os.listdir(data_folder + 'mics/random_array')
     else:
         files = os.listdir(data_folder + 'mics/fix_array')
@@ -119,11 +119,11 @@ def features_gen(data_folder, features_folder):
 
         record_name = file.rsplit('.',1)[0]
 
-        if data_folder == "data/":
+        if not is_test:
             signal, samplerate = sf.read(data_folder + 'mics/random_array/' + file)
         signal_const, samplerate = sf.read(data_folder + 'mics/fix_array/' + record_name + '.wav')
 
-        if data_folder == "data/":
+        if not is_test:
             mics_position = read_mics_position(data_folder + 'mics_position/random_array/' + record_name + '.csv')
         mics_position_const = read_mics_position(data_folder + 'mics_position/fix_array/' + record_name + '.csv')
 
@@ -137,7 +137,7 @@ def features_gen(data_folder, features_folder):
         write_feature(time_pp_matrix,features_folder + 'preprocessing1/' + record_name + '.csv', number_of_direction, type = "time")
 
         # preprocessing 2 - correlation
-        if data_folder == "data/":
+        if not is_test:
             correlation_pp_matrix = preprocessing.signal_preprocessing(
             signal, mics_position, number_of_direction, samplerate, frame_size, overlap, type = "correlation"
             )
@@ -150,7 +150,7 @@ def features_gen(data_folder, features_folder):
         write_feature(correlation_pp_matrix,features_folder + 'preprocessing2/' + record_name + '.csv', number_of_direction, type = "correlation")
         
         # preprocessing 3 - spectrum
-        if data_folder == "data/":
+        if not is_test:
             spectrum_pp_matrix = preprocessing.signal_preprocessing(
             signal, mics_position, number_of_direction, samplerate, frame_size, overlap, type = "spectrum"
             )
@@ -163,7 +163,7 @@ def features_gen(data_folder, features_folder):
         write_feature(spectrum_pp_matrix,features_folder + 'preprocessing3/' + record_name + '.csv', number_of_direction, type = "spectrum")
 
         # create lables
-        if data_folder == "data/":
+        if not is_test:
             VAD_lables = read_VAD_lables(data_folder + 'VAD_lables/random_array/' + record_name + '.csv')
         else:
             VAD_lables = read_VAD_lables(data_folder + 'VAD_lables/fix_array/' + record_name + '.csv')
@@ -173,8 +173,8 @@ def main():
 
     start = time.time()
 
-    features_gen("data/", "data/features/")
-    features_gen("data/test/", "data/test/features/")
+    features_gen("/dsi/gannot-lab/datasets/doa_features_db/data/", "/dsi/gannot-lab/datasets/doa_features_db/data/features/", is_test = False)
+    features_gen("data/test/", "data/test/features/", is_test = True)
 
     # print run time
     end = time.time()
