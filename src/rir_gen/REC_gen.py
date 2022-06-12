@@ -81,12 +81,12 @@ def SNR(signal,noise,VAD_array):
     calculate SNR
     """ 
     signal_energy = (np.std(signal[VAD_array], axis = 0))**2
-    noise_energy = (np.std(noise, axis = 0))**2
-    SNR = 10*np.log10(signal_energy/noise_energy)
+    noise_energy = (np.std(noise[VAD_array], axis = 0))**2
+    SNR = np.mean(10*np.log10(signal_energy/noise_energy))
 
     return SNR
 
-def add_noise(signal, SNR_ratio ,mics_num, mic_locations, VAD_array,  Noise = 'WhiteNoise'):
+def add_noise(signal, noise, SNR_ratio ,mics_num, VAD_array,  Noise = 'RoomNoise'):
     """
     add noise to the signals
     """    
@@ -114,15 +114,26 @@ def add_noise(signal, SNR_ratio ,mics_num, mic_locations, VAD_array,  Noise = 'W
 
     # if Noise == 'INF': #isotropic noise field
 
-    #     #create INF filter from matlab code
-        
-    #     eng = mt.engine.start_matlab()
-    #     INF_filter = eng.sinf_3D(mic_locations,len = 4096)
-    #     eng.quit()
+    if Noise == 'RoomNoise': ## Add Room noise by SNR = 10log(signal/(alpha*noise))
 
-    #     array_signal_with_noise_3D =  ss.convolve(INF_filter[:, None, :], signal[:, :, None])
-    #     array_signal_with_noise = array_signal_with_noise_3D.reshape(array_signal_with_noise_3D.shape[0],mics_num) #convert 3D array to 2D
-       
+        # array_std = np.std(signal, axis = 0)
+        array_std = np.std(signal[VAD_array], axis = 0)/np.std(noise[VAD_array], axis = 0) #signal/noise
+
+        # room noise std
+        alpha = array_std / np.sqrt(10**(SNR_ratio/10))
+        alpha = np.resize(alpha, (signal.shape))
+
+        # matrix for normalize RoomNoise
+        array_RoomNoise_normalized = np.multiply(alpha, noise)
+
+        # add noise to signal
+        array_signal_with_noise =  signal + array_RoomNoise_normalized 
+        
+        # # sanity check
+        # signal_energy = (np.std(signal[VAD_array], axis = 0))**2
+        # noise_energy = (np.std(array_RoomNoise_normalized, axis = 0))**2
+        # SNR = 10*np.log10(signal_energy/noise_energy)
+   
     return array_signal_with_noise
 
 def voice_activity_detection(signal, win_size = 1024, win_hop=512, threshold=-30, E0=1):
@@ -168,6 +179,7 @@ def voice_activity_detection(signal, win_size = 1024, win_hop=512, threshold=-30
 def signal_gen(data_folder, signals_num):
 
     number_of_oracle_files = signals_num
+    RECdata = pd.read_csv(data_folder + 'oracle/RECmeas0.csv')
 
     # const array parameters and RIR
     mics_num_const = 6
@@ -210,12 +222,12 @@ def signal_gen(data_folder, signals_num):
             print("Create file: " + str(i))
 
         # const parameters
-        angle = 30*i
-        mics_num = 6
-        mics_radius = 5/100 #cm to m
-        source_dist = 1.5
-        #file_index = np.random.randint(1, number_of_mics_files + 1)
-        rev_time  =5/10 # Reverberation time (s)  
+        angle = RECdata.angle[i]
+        mics_num = RECdata.mics_num[i]   
+        mics_radius = RECdata.mics_radius[i]/100 #cm to m
+        source_dist = RECdata.source_dist[i]
+        rev_time  = RECdata.rev_time[i] # Reverberation time (s)  
+
         # SNR_ratio = np.random.normal(18,3) #noraml distribution with mean of 18 and std of 3
         # # SNR range is 0 to 40 dB
         # if SNR_ratio < 0 : SNR_ratio = 0
@@ -254,15 +266,24 @@ def signal_gen(data_folder, signals_num):
         # calculate the voice activity
         VAD_array = voice_activity_detection(signal, win_size = 1024, win_hop=512, threshold=-50, E0=max(signal[:,0]))
 
-        #choose noise record and calculte SNR
+        #choose noise record
         noise_name = data_folder + 'oracle/quiet_room.flac'
+        #noise_name = data_folder + 'oracle/aircondition_noise_room.flac'
         noise_record, fs = sf.read(noise_name,always_2d=True)
-        #noise_record = data_folder + 'mics/fix_array/aircondition_noise_room.wav'
+
+        # if the noise is too short - fill it (cyclic)
+        while(noise_record.shape[0] < frame_num*frame_size):
+            pre_amp_signal = np.concatenate((noise_record, noise_record), axis = 0)
+        
+        # if the noise is too long - cut it
+        noise_record = noise_record[:frame_num*frame_size]
+
+        # calculte SNR 
         SNR_ratio = SNR(signal,noise_record, VAD_array)
 
-        # # add noise
-        # random_array_signal_with_noise = add_noise(signal, SNR_ratio, mics_num, r, VAD_array,  Noise = 'WhiteNoise')
-        # const_array_signal_with_noise = add_noise(const_array_signal_2D, SNR_ratio, mics_num_const, r_const, VAD_array, Noise = 'WhiteNoise')
+        # add noise
+        SNR_art = 10 #SNR artificial 
+        const_array_signal_with_noise = add_noise(signal, noise_record, SNR_art, mics_num_const, VAD_array, Noise = 'RoomNoise')
 
         # save signal.wav files to mics folder
         sf.write(data_folder + 'mics/fix_array/file_'+str(i)+'.wav',signal,fs)
@@ -293,9 +314,9 @@ def main():
 
     start = time.time()
 
-    number_of_files_to_create = 11
+    number_of_files_to_create = 14
     # create the signal with rir generator
-    signal_gen("data/test/", number_of_files_to_create)
+    signal_gen("data/RECtest/", number_of_files_to_create)
 
     # print run time
     end = time.time()

@@ -174,7 +174,7 @@ def main():
     start = time.time()
 
     features_gen("/dsi/gannot-lab/datasets/doa_features_db/data/", "/dsi/gannot-lab/datasets/doa_features_db/data/features/", is_test = False)
-    features_gen("data/test/", "data/test/features/", is_test = True)
+    features_gen("data/RECtest/", "data/RECtest/features/", is_test = True)
 
     # print run time
     end = time.time()
