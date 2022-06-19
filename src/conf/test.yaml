@@ -12,11 +12,11 @@ data_set_path : 'data/RECtest/features/'
 
 test: 
   starting_point : 0
-  amount : 14
+  amount : 35
 
 # Model - list of model for testing
 infer_from_ckpt :
-  - models/Basic_run_a0.5_b0.5/lightning_logs/version_1/checkpoints/epoch=99-val_loss=0.03.ckpt 
+  - models/Basic_run_a0.5_b0.5/lightning_logs/version_1/checkpoints/epoch=68-val_loss=0.00.ckpt
 
 #output report directory
 reports_directory : 'reports/RECtest/'

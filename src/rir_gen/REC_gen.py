@@ -282,8 +282,10 @@ def signal_gen(data_folder, signals_num):
         SNR_ratio = SNR(signal,noise_record, VAD_array)
 
         # add noise
-        SNR_art = 10 #SNR artificial 
-        const_array_signal_with_noise = add_noise(signal, noise_record, SNR_art, mics_num_const, VAD_array, Noise = 'RoomNoise')
+        SNR_art = [20,15,10,6,3,0] #SNR artificial 
+        for j in range (len(SNR_art)):
+            const_array_signal_with_noise = add_noise(signal, noise_record, SNR_art[j], mics_num_const, VAD_array, Noise = 'RoomNoise')
+            sf.write(data_folder + 'mics/fix_array/file_'+str(i)+'_'+str(SNR_art[j])+'dB_SNR.wav',const_array_signal_with_noise,fs)
 
         # save signal.wav files to mics folder
         sf.write(data_folder + 'mics/fix_array/file_'+str(i)+'.wav',signal,fs)
@@ -302,19 +304,24 @@ def signal_gen(data_folder, signals_num):
         header_fix = ['x','y','z']
         data_fix = np.resize(r_const,(mics_num_const,3))
         data_path_fix = data_folder + 'mics_position/fix_array/file_'+str(i)+'.csv'
-
         write_mics_position(header_fix,data_fix,data_path_fix)
+        for j in range (len(SNR_art)):
+            data_path_fix = data_folder + 'mics_position/fix_array/file_'+str(i)+'_'+str(SNR_art[j])+'dB_SNR.csv'
+            write_mics_position(header_fix,data_fix,data_path_fix)
 
         # save VAD lables output files to VAD_lables folder
         lables = list([angle,1*x] for x in VAD_array)
         data_path_fix = data_folder + 'VAD_lables/fix_array/file_'+str(i)+'.csv'
         write_VAD(lables,data_path_fix)
+        for j in range (len(SNR_art)):
+            data_path_fix = data_folder + 'VAD_lables/fix_array/file_'+str(i)+'_'+str(SNR_art[j])+'dB_SNR.csv'
+            write_VAD(lables,data_path_fix)
 
 def main():
 
     start = time.time()
 
-    number_of_files_to_create = 14
+    number_of_files_to_create = 4
     # create the signal with rir generator
     signal_gen("data/RECtest/", number_of_files_to_create)
 
