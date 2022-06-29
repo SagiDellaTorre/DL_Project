@@ -1,0 +1,18 @@
+aliases
+set_dl_proj
+set_conda_env
+tensorboard_run
+
+env variable
+$DATABASE_ROOT
+$DL_PROJ_ROOT
+
+# enter exist tmux session 0 :  tmux a -t 0
+# open new session: tmux  
+# ctrl-b and then w : see the windows
+# choose windiow 
+# ctrl-b and then , : rename the name of the window
+# ctrl-b and then c : open new window 
+# ctrl-b and then d : exit
+# ctrl-d kill session
+# ctrl-b and then x : kill window
