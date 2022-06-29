@@ -5,16 +5,16 @@ defaults:
 #  =========== data-sets ===============
 
 # Main dataset
-data_set_path : /data/features
+data_set_path : /dsi/gannot-lab/datasets/doa_features_db/data/features
 
 starting_point : 
   train: 0 
-  val: 800
-  test: 900
+  val: 9000
+  test: 9990
 
 amount : 
-  train: 800
-  val: 100
+  train: 9000
+  val: 990
   test: 10
 
 # =============== DEBUG ===============
@@ -43,7 +43,7 @@ predict_mode : False
 # ======== Criterion ==========
 
 criterion : MSELoss # MSEloss #L1loss
-angle_loss_ratio : 0.7
+angle_loss_ratio : 0.99
 
 # ========= ModelCheckPoints =========
 
@@ -70,7 +70,7 @@ hydra:
     dir: models/${hydra.job.override_dirname}/${hydra.job.name}/
 
   job:
-    name: 'Basic_run_angleLossRatio_${angle_loss_ratio}'
+    name: 'Basic_run_angleLossRatio_${angle_loss_ratio}_amount_${amount.train}'
     config:
       # configuration for the ${hydra.job.override_dirname} runtime variable
       override_dirname:

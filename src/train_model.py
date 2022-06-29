@@ -109,9 +109,9 @@ def main(args):
     # Storing the code in the model-folder
     pl_checkpoints_path = os.getcwd() + '/'
 
-    #change to hard path
-    path = str(ROOT_PATH)
-    args.data_set_path = path + args.data_set_path
+    # #change to hard path
+    # path = str(ROOT_PATH)
+    # args.data_set_path = path + args.data_set_path
 
     # save train_model.py and model_def.py files as part of hydra output
     shutil.copy(hydra.utils.get_original_cwd() + '/src/train_model.py', 'save_train_model.py')
@@ -161,34 +161,4 @@ def main(args):
 
 if __name__ == '__main__':
     main()
-
-# Tensor Board:
-# tensorboard --logdir models
-
-
-# enter exist tmux session 0 :  tmux a -t 0
-# open new session: tmux  
-# ctrl-b and then w : see the windows
-# choose windiow 
-# ctrl-b and then , : rename the name of the window
-# ctrl-b and then c : open new window 
-# ctrl-b and then d : exit
-# ctrl-d kill session
-# ctrl-b and then x : kill window
-
-# ofersc@ubuntu-beast:/data/ssd/ofersc/NNֹ_AEC$ tensorboard --logdir models/
-
-#GPU status: 
-# gpustat -i 5
-
-# test
-
-
-# connection problems: 
-# In Moba: 
-# ps aux | grep ofer
-# kill -9 14407 # kill each former ssh connections
-
-
-
 
