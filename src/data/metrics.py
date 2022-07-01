@@ -3,7 +3,7 @@ import os
 import torch
 from scipy.io.wavfile import write
 import sys
-import soundfile
+import soundfile as sf
 import matplotlib.pyplot as plt
 from data.data_utils import AudioPreProcessing
 from pathlib import Path
@@ -17,32 +17,48 @@ def create_dirs(dirs_list):
         if not os.path.exists(directory):
             os.makedirs(directory)
 
-def inference(args, audio_pre_process, model, target_wav, feature_wav, report_dir, file_name):
+def inference(args, audio_pre_process, model, target_wav, feature_wav, report_dir, file_name, signal_wav):
 
-    #device = torch.device('cuda:{:d}'.format(next(model.parameters()).device.index)) if torch.cuda.is_available() else 'cpu'
+    # the real signal
+    signal, samplerate = sf.read(signal_wav)
+    frame_jump = args.window_size - args.overlap
 
+    # plot and calculate the error only after the network is converging
+    start_from_frame = int(args.test.start_from_frame)
+    starting_points_to_plot_signal = start_from_frame * frame_jump
+
+    # calculate the output of the network
     target, input_data = audio_pre_process.transformations(target_wav,feature_wav)
 
     if torch.cuda.is_available():
         input_data = input_data.to(torch.device('cuda'))
+        target = target.to(torch.device('cuda'))
 
     pred = model(torch.unsqueeze(input_data, 0))
 
+    ## calculate the error
+    mean_absolute_error = sum((abs(pred[0,start_from_frame:,0]*360 - target[start_from_frame:,0])))/pred.shape[1]
+    mean_absolute_error = round(float(mean_absolute_error), 2)
+
+    ## plot the results
+    target_on_cpu = target.cpu()
+    pred_on_cpu = pred.cpu()
 
     #Visualize spectogram
     fig, axs = plt.subplots(2, 1, constrained_layout=True)   
-    fig.suptitle('NN predictions') 
+    fig.suptitle('NN predictions. Mean Absolute Error = ' + str(mean_absolute_error)) 
 
-    axs[0].plot(range(target.shape[0]), target[:,1], label="target")
-    axs[0].plot(range(target.shape[0]), pred[0,:,1], label="prediction")
+    axs[0].plot(range(signal.shape[0] - starting_points_to_plot_signal), signal[starting_points_to_plot_signal:,1]*0.9/max(signal[starting_points_to_plot_signal:,1]), label="signal")
+    axs[0].plot(range(target_on_cpu.repeat_interleave(frame_jump, dim=0).shape[0]- starting_points_to_plot_signal), target_on_cpu.repeat_interleave(frame_jump, dim=0)[starting_points_to_plot_signal:,1], label="target")
+    axs[0].plot(range(pred_on_cpu.repeat_interleave(frame_jump, dim=1).shape[1] - starting_points_to_plot_signal), pred_on_cpu.repeat_interleave(frame_jump, dim=1)[0,starting_points_to_plot_signal:,1], label="prediction")
     axs[0].set_title('VAD figure')
     axs[0].set_xlabel('Frame')
     axs[0].set_ylabel('VAD')
     axs[0].legend()
 
-    axs[1].plot(range(target.shape[0]), target[:,0], label="target")
-    axs[1].plot(range(target.shape[0]), pred[0,:,0]*360, label="prediction")
-    axs[1].plot(range(target.shape[0]), target[:,1]*360, label="VAD")
+    axs[1].plot(range(target_on_cpu.shape[0]-start_from_frame), target_on_cpu[start_from_frame:,0], label="target")
+    axs[1].plot(range(target_on_cpu.shape[0]-start_from_frame), pred_on_cpu[0,start_from_frame:,0]*360, label="prediction")
+    # axs[1].plot(range(target_on_cpu.shape[0]), target_on_cpu[:,1]*360, label="VAD")
     axs[1].set_title('Angle figure')
     axs[1].set_xlabel('Frame')
     axs[1].set_ylabel('Angle')
@@ -50,7 +66,7 @@ def inference(args, audio_pre_process, model, target_wav, feature_wav, report_di
 
     plt.savefig(report_dir + file_name + '.png')
 
-    return 
+    return mean_absolute_error
 
 def pred_model(args,model,output_name,save_output_files):
     
@@ -92,20 +108,28 @@ def test_model(args, model, report_dir):
 
     model = model.eval()
 
-    starting_point = int(args.test.starting_point)
     amount = int(args.test.amount)
     audio_pre_process = AudioPreProcessing(args)
 
+    path = str(ROOT_PATH)
+    test_feature_dir = path + '/' + args.test_set_path  + "preprocessing3/"
+    files = os.listdir(test_feature_dir)
+
     with torch.no_grad():
 
-        for i in range(starting_point, starting_point + amount):
+        # for all tiles in the test dir:
+        for i, file in enumerate(files):
 
-            path = str(ROOT_PATH)
-            file_name = "file_" +  str(i)
-            target_file = path + '/' + args.data_set_path + "lables/" + file_name + ".csv"
-            feature_file = path + '/' + args.data_set_path + "preprocessing3/" + file_name + ".csv"
+            if amount != -1 and i >= amount:
+                break
 
-            output = inference(args, audio_pre_process, model, target_file, feature_file, report_dir, file_name)
+            file_name = file.rsplit('.',1)[0]
+            target_file = path + '/' + args.test_set_path + "lables/" + file_name + ".csv"
+            feature_file = path + '/' + args.test_set_path + "preprocessing3/" + file_name + ".csv"
+            signal = path + '/' + args.test_set_path + "../mics/fix_array/" + file_name + ".wav"
+
+            # use the network, plot the results and calculate the error
+            output = inference(args, audio_pre_process, model, target_file, feature_file, report_dir, file_name, signal)
 
             # write output file
             # write(output_file_generated, args.sample_rate, (output*2**15).cpu().numpy().T.astype(np.int16)) 

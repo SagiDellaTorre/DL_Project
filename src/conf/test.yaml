@@ -8,15 +8,15 @@ defaults:
 # target files:  <data_set_path> + /lables/ + file_<starting_points>.csv
 # feature files: <data_set_path> + /preprocessing3/ + file_<starting_points>.csv
 
-data_set_path : 'data/RECtest/features/'
+test_set_path : 'data/RECtest/features/' # 'data/features/'
 
 test: 
-  starting_point : 0
-  amount : 35
+  amount : -1 # how many files to test from the test_set_path. -1 means all the files in the folder
+  start_from_frame: 0 # option to plot and calculate the error only after the network is converging
 
 # Model - list of model for testing
 infer_from_ckpt :
-  - models/Basic_run_a0.5_b0.5/lightning_logs/version_1/checkpoints/epoch=68-val_loss=0.00.ckpt
+  - models/Basic_run_angleLossRatio_0.99_amount_9000/lightning_logs/version_0/checkpoints/epoch=120-val_loss=0.00.ckpt
 
 #output report directory
 reports_directory : 'reports/RECtest/'
