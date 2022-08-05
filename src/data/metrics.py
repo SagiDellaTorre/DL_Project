@@ -7,6 +7,7 @@ import soundfile as sf
 import matplotlib.pyplot as plt
 from data.data_utils import AudioPreProcessing
 from pathlib import Path
+import csv
 ROOT_PATH = Path(__file__).parent.parent.parent
 
 def create_dirs(dirs_list):
@@ -120,6 +121,8 @@ def test_model(args, model, report_dir):
     test_feature_dir = path + '/' + args.test_set_path  + "preprocessing3/"
     files = os.listdir(test_feature_dir)
 
+    error_list = {}
+
     with torch.no_grad():
 
         # for all tiles in the test dir:
@@ -136,7 +139,20 @@ def test_model(args, model, report_dir):
             # use the network, plot the results and calculate the error
             output = inference(args, audio_pre_process, model, target_file, feature_file, report_dir, file_name, signal)
 
-            # write output file
-            # write(output_file_generated, args.sample_rate, (output*2**15).cpu().numpy().T.astype(np.int16)) 
-        
-    return
+            error_list[file_name] = output
+
+        # calculate the average error
+        res = 0
+        for val in error_list.values():
+            res += val
+        average_for_all_files = res / len(error_list)
+        error_list["Average"] = average_for_all_files
+
+        # write results to csv
+        with open(report_dir + 'error_results' + '.csv', 'w') as output:
+            writer = csv.writer(output)
+            writer.writerow(["File Name", "Mean Absolute Error"])
+            for key, value in error_list.items():
+                writer.writerow([key, value])
+
+    return average_for_all_files
