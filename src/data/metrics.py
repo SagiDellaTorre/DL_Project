@@ -50,8 +50,6 @@ def inference(args, audio_pre_process, model, target_wav, feature_wav, report_di
     fig.suptitle('NN predictions. Mean Absolute Error = ' + str(mean_absolute_error)) 
 
     axs[0].plot(range(signal.shape[0] - starting_points_to_plot_signal), signal[starting_points_to_plot_signal:,1]*0.9/max(signal[starting_points_to_plot_signal:,1]), label="signal")
-    axs[0].plot(range(target_on_cpu.repeat_interleave(frame_jump, dim=0).shape[0]- starting_points_to_plot_signal), target_on_cpu.repeat_interleave(frame_jump, dim=0)[starting_points_to_plot_signal:,1], label="target")
-    axs[0].plot(range(pred_on_cpu.repeat_interleave(frame_jump, dim=1).shape[1] - starting_points_to_plot_signal), pred_on_cpu.repeat_interleave(frame_jump, dim=1)[0,starting_points_to_plot_signal:,1], label="prediction")
     axs[0].set_title('VAD figure')
     axs[0].set_xlabel('Frame')
     axs[0].set_ylabel('VAD')
@@ -66,6 +64,12 @@ def inference(args, audio_pre_process, model, target_wav, feature_wav, report_di
     axs[1].legend()
 
     plt.savefig(report_dir + file_name + '.png')
+
+    #add the VAD to the figure
+    axs[0].plot(range(target_on_cpu.repeat_interleave(frame_jump, dim=0).shape[0]- starting_points_to_plot_signal), target_on_cpu.repeat_interleave(frame_jump, dim=0)[starting_points_to_plot_signal:,1], label="target")
+    axs[0].plot(range(pred_on_cpu.repeat_interleave(frame_jump, dim=1).shape[1] - starting_points_to_plot_signal), pred_on_cpu.repeat_interleave(frame_jump, dim=1)[0,starting_points_to_plot_signal:,1], label="prediction")
+
+    plt.savefig(report_dir + file_name + 'with_VAD'+ '.png')
 
     return mean_absolute_error
 
