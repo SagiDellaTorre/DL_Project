@@ -30,7 +30,7 @@ class Pl_module(pl.LightningModule):
     def __init__(self,args):
         super().__init__()
         self.args = args
-        self.model = GRU()
+        self.model = GRU(self.args)
         self.criterion = nn.MSELoss()
 
     def forward(self,x):

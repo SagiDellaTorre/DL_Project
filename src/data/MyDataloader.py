@@ -35,21 +35,20 @@ class DOA_Dataset(Dataset):
         self.args = args
         self.data_dir = data_dir
         self.batch_size = batch_size
-        self.os_listdir = os.listdir(self.data_dir+'/preprocessing3')
         self.audio_pre_process = AudioPreProcessing(self.args)
         self.starting_point = starting_point
         self.amount = amount
 
     
     def __len__(self):
+
         return self.amount
-        #### return len(self.os_listdir)
-        #return 16
 
     def __getitem__(self,idx):
+        
         idx_ = idx + self.starting_point
         target_wav  = self.data_dir+'/lables/file_'+str(idx_)+'.csv'
-        feature_wav = self.data_dir+'/preprocessing3/file_'+str(idx_)+'.csv'
+        feature_wav = self.data_dir+'/' + self.args.pre_process_type + '/file_'+str(idx_)+'.csv'
 
         return  self.audio_pre_process.transformations(target_wav,feature_wav)
 

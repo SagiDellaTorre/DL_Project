@@ -50,7 +50,7 @@ def main(args):
     path = str(ROOT_PATH)
     
     # Model definition 
-    model_type = GRU()
+    model_type = GRU(args)
     model = Pl_module(model_type)
     
     for ckpt_file in args.infer_from_ckpt:
@@ -65,15 +65,24 @@ def main(args):
         create_dirs(
             [str(ROOT_PATH) + '/' + args.reports_directory + 'figures/' + model_name,
             str(ROOT_PATH) + '/' + args.reports_directory + 'figures/' + model_name + '/' + version_num,
-            str(ROOT_PATH) + '/' + args.reports_directory + 'figures/' + model_name + '/' + version_num + '/' + ckpt_name]
+            str(ROOT_PATH) + '/' + args.reports_directory + 'figures/' + model_name + '/' + version_num + '/' + ckpt_name,
+            str(ROOT_PATH) + '/' + args.reports_directory + 'figures/analytic']
         )
         report_dir = str(ROOT_PATH) + '/' + args.reports_directory + 'figures/' + model_name + '/' + version_num + '/' + ckpt_name + '/'
+        if args.pre_process_type == 'analytic':
+            report_dir = str(ROOT_PATH) + '/' + args.reports_directory + 'figures/analytic/'
 
-        model = model.load_from_checkpoint(model=model_type, checkpoint_path = ckpt_file_path)
-        model.to(device)
+        if args.pre_process_type != 'analytic':
+            model = model.load_from_checkpoint(model=model_type, checkpoint_path = ckpt_file_path)
+            model.to(device)
+        else:
+            model = None
         
         # Run model on file
         test_model(args, model, report_dir)
+
+        if args.pre_process_type == 'analytic':
+            break
 
 if __name__ == '__main__':
     main()

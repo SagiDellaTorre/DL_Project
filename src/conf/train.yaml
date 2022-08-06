@@ -5,22 +5,23 @@ defaults:
 #  =========== data-sets ===============
 
 # Main dataset
-data_set_path : /dsi/gannot-lab/datasets/doa_features_db/data/features
+data_set_path : data/RECtest/features/ # data/features/ data/RECtest/features/ /dsi/gannot-lab/datasets/doa_features_db/data/features
 
 starting_point : 
   train: 0 
-  val: 9000
-  test: 9990
+  val: 700
+  test: 750
 
 amount : 
-  train: 9000
-  val: 990
-  test: 10
+  train: 700
+  val: 50
+  test: 0
 
 # =============== DEBUG ===============
 debug_flag: False
 
 # =============== data HP ===============
+pre_process_type : preprocessing3 # preprocessing2 or preprocessing3
 window_size : 1024
 overlap : 512
 number_of_direction : 36
@@ -70,7 +71,7 @@ hydra:
     dir: models/${hydra.job.override_dirname}/${hydra.job.name}/
 
   job:
-    name: 'Basic_run_angleLossRatio_${angle_loss_ratio}_amount_${amount.train}'
+    name: 'Basic_run_angleLossRatio_${angle_loss_ratio}_amount_${amount.train}_${pre_process_type}'
     config:
       # configuration for the ${hydra.job.override_dirname} runtime variable
       override_dirname:

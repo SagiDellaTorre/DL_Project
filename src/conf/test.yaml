@@ -8,7 +8,7 @@ defaults:
 # target files:  <data_set_path> + /lables/ + file_<starting_points>.csv
 # feature files: <data_set_path> + /preprocessing3/ + file_<starting_points>.csv
 
-test_set_path : 'data/RECtest/features/' # 'data/features/'
+test_set_path : 'data/RECtest/features/' # 'data/features/' 'data/RECtest/features/' '/home/dsi/dellats1/DL_Project/data/features/'
 
 test: 
   amount : -1 # how many files to test from the test_set_path. -1 means all the files in the folder
@@ -16,7 +16,9 @@ test:
 
 # Model - list of model for testing
 infer_from_ckpt :
-  - models/Basic_run_angleLossRatio_0.99_amount_9000/lightning_logs/version_0/checkpoints/epoch=120-val_loss=0.00.ckpt
+  - models/Basic_run_angleLossRatio_0.99_amount_700_preprocessing2/lightning_logs/version_0/checkpoints/epoch=37-val_loss=0.07.ckpt
+
+pre_process_type : preprocessing3 # preprocessing2 or preprocessing3 or analytic
 
 #output report directory
 reports_directory : 'reports/RECtest/'

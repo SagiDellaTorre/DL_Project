@@ -45,7 +45,11 @@ class AudioPreProcessing():
                 feature = [float(i) for i in row_data]
                 
                 feature = torch.tensor(feature)
-                feature = torch.reshape(feature, (1,freq_num,-1))
+                if self.args.pre_process_type == "preprocessing3" :  # default - preprocessing3
+                    feature = torch.reshape(feature, (1,freq_num,-1))
+                else: 
+                    feature = torch.reshape(feature, (1,-1))
+
                 if i == 0:
                     feature_mat = feature 
                 else:
@@ -58,5 +62,5 @@ class AudioPreProcessing():
         target = torch.from_numpy(lables) # cast to torch tensor
         target = torch.tensor(target,dtype=torch.float) # cast to float
         input_data = feature_mat
-
+        
         return target, input_data
