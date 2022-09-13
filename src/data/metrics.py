@@ -42,7 +42,7 @@ def inference(args, audio_pre_process, model, target_wav, feature_wav, report_di
 
     ## calculate the error
     abs_error_tensor = abs(pred[0,start_from_frame:,0]*360 - target[start_from_frame:,0])
-    mean_absolute_error = sum(torch.minimum(abs_error_tensor, 360 - abs_error_tensor))/pred.shape[1]
+    mean_absolute_error = sum(torch.minimum(abs_error_tensor, 360 - abs_error_tensor))/(pred.shape[1] - args.test.start_from_frame)
     mean_absolute_error = round(float(mean_absolute_error), 2)
 
     ## plot the results
