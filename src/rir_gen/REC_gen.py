@@ -197,6 +197,7 @@ def signal_gen(data_folder, signals_num):
         [data_folder + 'RIR', data_folder + 'RIR/fix_array',
         data_folder + 'meta', data_folder + 'meta/fix_array',
         data_folder + 'mics_position', data_folder + 'mics_position/fix_array',
+        data_folder + 'mics', data_folder + 'mics/fix_array',
         data_folder + 'VAD_lables', data_folder + 'VAD_lables/fix_array']
     )
 
@@ -204,6 +205,7 @@ def signal_gen(data_folder, signals_num):
         [data_folder + 'RIR', data_folder + 'RIR/fix_array',
         data_folder + 'meta', data_folder + 'meta/fix_array',
         data_folder + 'mics_position', data_folder + 'mics_position/fix_array',
+        data_folder + 'mics', data_folder + 'mics/fix_array',
         data_folder + 'VAD_lables', data_folder + 'VAD_lables/fix_array']
     )
    
@@ -321,7 +323,7 @@ def main():
 
     start = time.time()
 
-    number_of_files_to_create = 4
+    number_of_files_to_create = 16
     # create the signal with rir generator
     signal_gen("data/RECtest/", number_of_files_to_create)
 
