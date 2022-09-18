@@ -9,6 +9,7 @@ defaults:
 # feature files: <data_set_path> + /preprocessing3/ + file_<starting_points>.csv
 
 test_set_path : 'data/RECtest/features/' # 'data/features/' 'data/RECtest/features/' '/home/dsi/dellats1/DL_Project/data/features/'
+test_type : 'real' # 'real' 'rir'
 
 test: 
   amount : -1 # how many files to test from the test_set_path. -1 means all the files in the folder

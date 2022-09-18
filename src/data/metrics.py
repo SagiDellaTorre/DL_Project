@@ -89,6 +89,7 @@ def test_model(args, model, report_dir):
 
     path = str(ROOT_PATH)
     pre_process_type = 'preprocessing2' if args.pre_process_type == 'analytic' else args.pre_process_type
+    rec_type = "random_array" if args.test_type == 'rir' else "fix_array"
     test_feature_dir = path + '/' + args.test_set_path  + pre_process_type + "/"
     files = os.listdir(test_feature_dir)
 
@@ -105,7 +106,7 @@ def test_model(args, model, report_dir):
             file_name = file.rsplit('.',1)[0]
             target_file = path + '/' + args.test_set_path + "lables/" + file_name + ".csv"
             feature_file = path + '/' + args.test_set_path + pre_process_type + "/" + file_name + ".csv"
-            signal = path + '/' + args.test_set_path + "../mics/fix_array/" + file_name + ".wav"
+            signal = path + '/' + args.test_set_path + "../mics/" + rec_type + "/" + file_name + ".wav"
 
             # use the network, plot the results and calculate the error
             output = inference(args, audio_pre_process, model, target_file, feature_file, report_dir, file_name, signal)
