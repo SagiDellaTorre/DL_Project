@@ -158,6 +158,9 @@ def signal_preprocessing(signal, mic_locations, number_of_direction, samplerate,
             break
         
         temp_frame_preprocessing = frame_preprocessing(block, mic_locations, number_of_direction, samplerate,  type)
+        # # option to do preprocess2 by sum on preprocess3
+        # temp_frame_preprocessing = temp_frame_preprocessing.sum(axis=0)
+        # temp_frame_preprocessing = temp_frame_preprocessing.reshape(1,36)
 
         if type == "spectrum" or type == "correlation":
             if block_idx==0:
